@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 4 Missing Values | Data cleaning using R</title>
+  <meta name="description" content="Chapter 4 Missing Values | Data cleaning using R" />
+  <meta name="generator" content="bookdown 0.29 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 4 Missing Values | Data cleaning using R" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 4 Missing Values | Data cleaning using R" />
+  
+  
+  
+
+<meta name="author" content="Yudu Chen Yc4142" />
+
+
+<meta name="date" content="2022-11-10" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="duplicated-values.html"/>
+<link rel="next" href="interactive-component.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">DataCleaningW/R</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Data cleaning with R</a></li>
+<li class="chapter" data-level="2" data-path="data-we-use.html"><a href="data-we-use.html"><i class="fa fa-check"></i><b>2</b> Data we use</a></li>
+<li class="chapter" data-level="3" data-path="duplicated-values.html"><a href="duplicated-values.html"><i class="fa fa-check"></i><b>3</b> Duplicated Values</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="duplicated-values.html"><a href="duplicated-values.html#data-set-with-row-wise-duplicates"><i class="fa fa-check"></i><b>3.1</b> Data set with row-wise duplicates</a></li>
+<li class="chapter" data-level="3.2" data-path="duplicated-values.html"><a href="duplicated-values.html#duplicates-based-on-specific-columns"><i class="fa fa-check"></i><b>3.2</b> Duplicates based on specific columns</a></li>
+<li class="chapter" data-level="3.3" data-path="duplicated-values.html"><a href="duplicated-values.html#conclusion"><i class="fa fa-check"></i><b>3.3</b> Conclusion</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="missing-values.html"><a href="missing-values.html"><i class="fa fa-check"></i><b>4</b> Missing Values</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="missing-values.html"><a href="missing-values.html#na-in-r"><i class="fa fa-check"></i><b>4.1</b> NA in R</a>
+<ul>
+<li class="chapter" data-level="4.1.1" data-path="missing-values.html"><a href="missing-values.html#drop-rows-with-missing-data-in-specified-columns"><i class="fa fa-check"></i><b>4.1.1</b> Drop rows with missing data in specified columns</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="missing-values.html"><a href="missing-values.html#impute"><i class="fa fa-check"></i><b>4.2</b> Impute</a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="missing-values.html"><a href="missing-values.html#numerical"><i class="fa fa-check"></i><b>4.2.1</b> Numerical</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="interactive-component.html"><a href="interactive-component.html"><i class="fa fa-check"></i><b>5</b> Interactive component</a></li>
+<li class="chapter" data-level="6" data-path="conclusion-1.html"><a href="conclusion-1.html"><i class="fa fa-check"></i><b>6</b> Conclusion</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Data cleaning using R</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="missing-values" class="section level1 hasAnchor" number="4">
+<h1><span class="header-section-number">Chapter 4</span> Missing Values<a href="missing-values.html#missing-values" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>Encountering missing data in dataset is not uncommon. When collecting temperature data the sensor might be broken and unable to measure temperature. When conduct public opinion surveying, the interviewee might forget filling entires on questionaires. Many data science job requires completeness of data, such as training predicative model based on numerical/categorical data. We will now discuss doing data cleaning in R.</p>
+<p>We will use ‘tidyr’ library for this task:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="missing-values.html#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span></code></pre></div>
+<div id="na-in-r" class="section level2 hasAnchor" number="4.1">
+<h2><span class="header-section-number">4.1</span> NA in R<a href="missing-values.html#na-in-r" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>In R, a missing value is represented by symbol “NA”.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="missing-values.html#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(airquality, <span class="dv">10</span>)</span></code></pre></div>
+<pre><code>##    Ozone Solar.R Wind Temp Month Day
+## 1     41     190  7.4   67     5   1
+## 2     36     118  8.0   72     5   2
+## 3     12     149 12.6   74     5   3
+## 4     18     313 11.5   62     5   4
+## 5     NA      NA 14.3   56     5   5
+## 6     28      NA 14.9   66     5   6
+## 7     23     299  8.6   65     5   7
+## 8     19      99 13.8   59     5   8
+## 9      8      19 20.1   61     5   9
+## 10    NA     194  8.6   69     5  10</code></pre>
+<p>We can observe, at index 5, the instance has missing value in “Ozone” and “Solar.R” feasure, represented by symbol “NA”.
+## Dropping rows with missing data
+A simple approach is to drop rows with missing data. If our task requires using all features in dataset, we can opt to drop all rows with at least one missing value. However, if our task required using some features, we only need to drop rows with missing values in feastures we specify. We will discuss both cases.
+### Drop all rows containing missing Data
+Suppose we want to use all features in “airquality” dataset and we want to drop all rows with at least 1 missing values. We first check number of rows with missing data in the dataset. The ‘is.na(df)’ command returns a boolean array, where truth value at each index indicate if data element at the same index in data frame df is NA or not. By summing number of “TRUE” values in the ‘is.na(df)’, we know total number of missing values in the data set.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="missing-values.html#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">is.na</span>(airQuality_preProcessing))</span></code></pre></div>
+<pre><code>## [1] 44</code></pre>
+<p>We see we have totally 44 missing with at least 1 missing values.
+To know number of rows with missing value, we use “complete.cases(df)”. The return an array of boolean where boolean value at each index indicate if data instance/case at the corresponding row index in dataset df is complete (having no NA the missing valye) or not. By summing the number of false in the array, we get the total number of rows that has at least 1 missing value.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="missing-values.html#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="sc">!</span><span class="fu">complete.cases</span>(airQuality_preProcessing))</span></code></pre></div>
+<pre><code>## [1] 42</code></pre>
+<p>To visualize all rows with missing value:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="missing-values.html#cb9-1" aria-hidden="true" tabindex="-1"></a>airQuality_preProcessing[<span class="sc">!</span><span class="fu">complete.cases</span>(airQuality_preProcessing), ]</span></code></pre></div>
+<p>We now remove rows with na. We use “drop_na()” function from tidyr library to remove all rows with missing values. There are multipe ways to drop rows with missing value, but we will not go exhaustive on this.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="missing-values.html#cb10-1" aria-hidden="true" tabindex="-1"></a>airQuality_na_droped <span class="ot">&lt;-</span> airQuality_preProcessing <span class="sc">%&gt;%</span> <span class="fu">drop_na</span>()</span>
+<span id="cb10-2"><a href="missing-values.html#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">is.na</span>(airQuality_na_droped))</span></code></pre></div>
+<pre><code>## [1] 0</code></pre>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="missing-values.html#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(airQuality_na_droped)</span></code></pre></div>
+<pre><code>## [1] 111</code></pre>
+<p>After removing all 42 rows with missing values, we only have 111 rows left, with 42 rows removed from total 153 rows in original data frame.</p>
+<div id="drop-rows-with-missing-data-in-specified-columns" class="section level3 hasAnchor" number="4.1.1">
+<h3><span class="header-section-number">4.1.1</span> Drop rows with missing data in specified columns<a href="missing-values.html#drop-rows-with-missing-data-in-specified-columns" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="na-in-single-column" class="section level4 hasAnchor" number="4.1.1.1">
+<h4><span class="header-section-number">4.1.1.1</span> NA in single column<a href="missing-values.html#na-in-single-column" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>We can see dropping all columns with missing data could be wasteful if we don’t use all features in the dataset. For example, if our job does not require feature “Ozone”, we don’t really care if “Ozone” value is missing or not as it is irrelevant to our task. We will explore how to drop rows with na in specific columns.</p>
+<p>We see “is.na(df)” evaluate presence of NA(missing value) in the entire data set. If we change its argument from df, the entire data set, into a specific column, the function will only evaluate specific columns in the data set and return a boolean array that only reflects presence of missing value at the columns. For example, if we want to see number of rows with missing value in “Ozone” column:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="missing-values.html#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">is.na</span>(airQuality_preProcessing<span class="sc">$</span>Ozone))</span></code></pre></div>
+<pre><code>## [1] 37</code></pre>
+<p>There are 37 rows with NA in “Ozone” column. To drop rows with missing value in “Ozone”, we put column name “Ozone” as argument:</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="missing-values.html#cb16-1" aria-hidden="true" tabindex="-1"></a>airQuality_na_droped_Ozone <span class="ot">&lt;-</span> airQuality_preProcessing <span class="sc">%&gt;%</span> <span class="fu">drop_na</span>(Ozone)</span>
+<span id="cb16-2"><a href="missing-values.html#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(airQuality_na_droped_Ozone)</span></code></pre></div>
+<pre><code>## [1] 116</code></pre>
+<p>37 rows are extracted from 153 columns, resulting in 116 rows.</p>
+</div>
+<div id="na-in-several-columns-and" class="section level4 hasAnchor" number="4.1.1.2">
+<h4><span class="header-section-number">4.1.1.2</span> NA in several columns (And)<a href="missing-values.html#na-in-several-columns-and" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>If we want to drop rows with NA in specific column, for example, rows with NA in both “Ozone” and “Solar.R” columns, we can take advantage of the fact that “is.na(df)” is a boolean array, and we can perform element wise boolean operation in two arrays of same dimension:</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="missing-values.html#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">is.na</span>(airQuality_preProcessing<span class="sc">$</span>Ozone) <span class="sc">&amp;</span> <span class="fu">is.na</span>(airQuality_preProcessing<span class="sc">$</span>Solar.R))</span></code></pre></div>
+<pre><code>## [1] 2</code></pre>
+<p>We see number of rows with missing value in both “Ozone” and “Solar.R” is 2. We now visualize two rows:</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="missing-values.html#cb20-1" aria-hidden="true" tabindex="-1"></a>airQuality_preProcessing[<span class="fu">is.na</span>(airQuality_preProcessing<span class="sc">$</span>Ozone) <span class="sc">&amp;</span> <span class="fu">is.na</span>(airQuality_preProcessing<span class="sc">$</span>Solar.R), ]</span></code></pre></div>
+<pre><code>##    Ozone Solar.R Wind Temp Month Day
+## 5     NA      NA 14.3   56     5   5
+## 27    NA      NA  8.0   57     5  27</code></pre>
+<p>Having the boolean array, we can negate the logics and obtain all rows where we don’t have missing values in “Ozone” and “Solar.R” at the same time.</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="missing-values.html#cb22-1" aria-hidden="true" tabindex="-1"></a>airQuality_NA_Ozone_and_Solor <span class="ot">&lt;-</span> airQuality_preProcessing[<span class="sc">!</span>(<span class="fu">is.na</span>(airQuality_preProcessing<span class="sc">$</span>Ozone) <span class="sc">&amp;</span> <span class="fu">is.na</span>(airQuality_preProcessing<span class="sc">$</span>Solar.R)), ]</span>
+<span id="cb22-2"><a href="missing-values.html#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(airQuality_NA_Ozone_and_Solor)</span></code></pre></div>
+<pre><code>## [1] 151</code></pre>
+<p>We have droped two rows from 153 rows in original dataset, so we have 151 rows left.</p>
+</div>
+<div id="na-in-several-columns-or" class="section level4 hasAnchor" number="4.1.1.3">
+<h4><span class="header-section-number">4.1.1.3</span> NA in several columns (Or)<a href="missing-values.html#na-in-several-columns-or" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>What if we want to drop columns with NA in “Ozone” or “Solar.R”, such that if any of the two columns contains missing values. We could have used boolean operation between several boolean arrays as we did, but it could be tedious as we have more feastures to consider. We could use “complete.cases()” but use specific columns in dataset as input. The “complete.cases()” returns false if a single column in the rows in data frame we pass in has a missing value, so we could perform “or” operation with it.</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="missing-values.html#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="sc">!</span>(<span class="fu">complete.cases</span>(airQuality_preProcessing[,<span class="fu">c</span>(<span class="st">&quot;Ozone&quot;</span>,<span class="st">&quot;Solar.R&quot;</span>)])))</span></code></pre></div>
+<pre><code>## [1] 42</code></pre>
+<p>There are 42 rows with missing values in either “Ozone” or “Solar.R”, or both. In fact, missing values only appear in those two columns, such that we get the total number of rows with missing values in the data set. We can obtain all datas that does not having missing value in “Ozone” or “Solar.R”.</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="missing-values.html#cb26-1" aria-hidden="true" tabindex="-1"></a>airQuality_NA_Ozone_or_Solor<span class="ot">&lt;-</span> airQuality_preProcessing[(<span class="fu">complete.cases</span>(airQuality_preProcessing[,<span class="fu">c</span>(<span class="st">&quot;Ozone&quot;</span>,<span class="st">&quot;Solar.R&quot;</span>)])), ]</span>
+<span id="cb26-2"><a href="missing-values.html#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(airQuality_NA_Ozone_or_Solor)</span></code></pre></div>
+<pre><code>## [1] 111</code></pre>
+<p>We have 111 rows after removing 42 rows with missing value on either “Ozone” or “Solar.R”</p>
+<p>We can also use drop_na() to with columns specified in function arguement:</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="missing-values.html#cb28-1" aria-hidden="true" tabindex="-1"></a>airQuality_NA_Ozone_or_Solor<span class="ot">&lt;-</span> airQuality_preProcessing <span class="sc">%&gt;%</span> <span class="fu">drop_na</span>(<span class="fu">c</span>(<span class="st">&quot;Ozone&quot;</span>, <span class="st">&quot;Solar.R&quot;</span>))</span>
+<span id="cb28-2"><a href="missing-values.html#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(airQuality_NA_Ozone_or_Solor)</span></code></pre></div>
+<pre><code>## [1] 111</code></pre>
+</div>
+<div id="drop-columns-with-certain-number-of-na" class="section level4 hasAnchor" number="4.1.1.4">
+<h4><span class="header-section-number">4.1.1.4</span> Drop columns with certain number of NA<a href="missing-values.html#drop-columns-with-certain-number-of-na" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>This might be uncommon, but we might want to drop rows with more than certain number of NA, such as rows with more than 3 NA and even rows with number of NA equal to number of columns, which means the row has all column value being NA. To know number of NA in each row, we can use “rowSums()” functions:</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="missing-values.html#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">rowSums</span>(<span class="fu">is.na</span>(airQuality_preProcessing)),<span class="dv">10</span>)</span></code></pre></div>
+<pre><code>##  [1] 0 0 0 0 2 1 0 0 0 1</code></pre>
+<p>This means for row 1 to row 10, row 5 has 2 NA and row 6 and 10 has 1 NA. We can drop all rows with number of NA above certain threshold. We now insert 3 rows with 3 NA into the data frame.</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="missing-values.html#cb32-1" aria-hidden="true" tabindex="-1"></a>airQuality_3NA_Inserted <span class="ot">&lt;-</span> airQuality_preProcessing</span>
+<span id="cb32-2"><a href="missing-values.html#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span> <span class="dv">3</span>)</span>
+<span id="cb32-3"><a href="missing-values.html#cb32-3" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb32-4"><a href="missing-values.html#cb32-4" aria-hidden="true" tabindex="-1"></a>  Ozone <span class="ot">&lt;-</span> <span class="fu">floor</span>(<span class="fu">runif</span>(<span class="dv">1</span>,<span class="at">min =</span> <span class="dv">0</span>, <span class="at">max =</span> <span class="dv">50</span>))</span>
+<span id="cb32-5"><a href="missing-values.html#cb32-5" aria-hidden="true" tabindex="-1"></a>  Solor <span class="ot">&lt;-</span> <span class="fu">floor</span>(<span class="fu">runif</span>(<span class="dv">1</span>,<span class="at">min =</span> <span class="dv">0</span>, <span class="at">max =</span> <span class="dv">300</span>))</span>
+<span id="cb32-6"><a href="missing-values.html#cb32-6" aria-hidden="true" tabindex="-1"></a>  Wind <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">runif</span>(<span class="dv">1</span>,<span class="at">min =</span> <span class="dv">0</span>, <span class="at">max =</span> <span class="dv">20</span>), <span class="dv">2</span>)</span>
+<span id="cb32-7"><a href="missing-values.html#cb32-7" aria-hidden="true" tabindex="-1"></a>  Temp <span class="ot">&lt;-</span> <span class="fu">floor</span>(<span class="fu">runif</span>(<span class="dv">1</span>,<span class="at">min =</span> <span class="dv">0</span>, <span class="at">max =</span> <span class="dv">20</span>))</span>
+<span id="cb32-8"><a href="missing-values.html#cb32-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb32-9"><a href="missing-values.html#cb32-9" aria-hidden="true" tabindex="-1"></a>  random_index <span class="ot">=</span> <span class="fu">floor</span>(<span class="fu">runif</span>(<span class="dv">1</span>, <span class="at">min =</span> <span class="dv">1</span>, <span class="at">max =</span> <span class="fu">nrow</span>(airQuality_3NA_Inserted)))</span>
+<span id="cb32-10"><a href="missing-values.html#cb32-10" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb32-11"><a href="missing-values.html#cb32-11" aria-hidden="true" tabindex="-1"></a>  Month <span class="ot">&lt;-</span> airQuality_3NA_Inserted [random_index, <span class="st">&#39;Month&#39;</span>]</span>
+<span id="cb32-12"><a href="missing-values.html#cb32-12" aria-hidden="true" tabindex="-1"></a>  Day <span class="ot">&lt;-</span> airQuality_3NA_Inserted [random_index, <span class="st">&#39;Day&#39;</span>]</span>
+<span id="cb32-13"><a href="missing-values.html#cb32-13" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb32-14"><a href="missing-values.html#cb32-14" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb32-15"><a href="missing-values.html#cb32-15" aria-hidden="true" tabindex="-1"></a>  toInsert <span class="ot">&lt;-</span> <span class="fu">c</span>(Ozone, Solor, Wind, Temp, Month, Day)</span>
+<span id="cb32-16"><a href="missing-values.html#cb32-16" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>) {</span>
+<span id="cb32-17"><a href="missing-values.html#cb32-17" aria-hidden="true" tabindex="-1"></a>    random_index <span class="ot">=</span> <span class="fu">floor</span>(<span class="fu">runif</span>(<span class="dv">1</span>, <span class="at">min =</span> <span class="dv">1</span>, <span class="at">max =</span> <span class="dv">6</span>))</span>
+<span id="cb32-18"><a href="missing-values.html#cb32-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">is.na</span>(toInsert[random_index])) {</span>
+<span id="cb32-19"><a href="missing-values.html#cb32-19" aria-hidden="true" tabindex="-1"></a>      random_index <span class="ot">=</span> <span class="fu">floor</span>(<span class="fu">runif</span>(<span class="dv">1</span>, <span class="at">min =</span> <span class="dv">1</span>, <span class="at">max =</span> <span class="dv">6</span>))</span>
+<span id="cb32-20"><a href="missing-values.html#cb32-20" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb32-21"><a href="missing-values.html#cb32-21" aria-hidden="true" tabindex="-1"></a>    toInsert <span class="ot">&lt;-</span> <span class="fu">replace</span>(toInsert, random_index, <span class="cn">NA</span>)</span>
+<span id="cb32-22"><a href="missing-values.html#cb32-22" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb32-23"><a href="missing-values.html#cb32-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-24"><a href="missing-values.html#cb32-24" aria-hidden="true" tabindex="-1"></a>  airQuality_3NA_Inserted [<span class="fu">nrow</span>(airQuality_3NA_Inserted )<span class="sc">+</span><span class="dv">1</span>,] <span class="ot">&lt;-</span> toInsert</span>
+<span id="cb32-25"><a href="missing-values.html#cb32-25" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb32-26"><a href="missing-values.html#cb32-26" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb32-27"><a href="missing-values.html#cb32-27" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb32-28"><a href="missing-values.html#cb32-28" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span>(airQuality_3NA_Inserted, <span class="dv">3</span>)</span></code></pre></div>
+<pre><code>##     Ozone Solar.R Wind Temp Month Day
+## 154    NA     256   NA    1    NA  29
+## 155     1      NA   NA    9    NA   4
+## 156     9      23   NA   NA    NA  13</code></pre>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="missing-values.html#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">&#39;number of rows in airQuality_3NA_Inserted is&#39;</span>, <span class="fu">nrow</span>(airQuality_3NA_Inserted)))</span></code></pre></div>
+<pre><code>## [1] &quot;number of rows in airQuality_3NA_Inserted is 156&quot;</code></pre>
+<p>Now last 3 rows have 3 NA at tail of airQuality_3NA_Inserted. We now check number of rows with more than or equal to 3 NA:</p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="missing-values.html#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">&quot;number of rows with at least 3 NA in airQuality_3NA_Inserted is &quot;</span>, <span class="fu">sum</span>(<span class="fu">rowSums</span>(<span class="fu">is.na</span>(airQuality_3NA_Inserted)) <span class="sc">&gt;=</span> <span class="dv">3</span>)))</span></code></pre></div>
+<pre><code>## [1] &quot;number of rows with at least 3 NA in airQuality_3NA_Inserted is 3&quot;</code></pre>
+<p>Now we have 3 rows with at least 3 NA. We now drop rows with at least 3 NA from airQuality_3NA_Inserted by selecting rows with NA less than 3 and reset reference of airQuality_3NA_Inserted:</p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="missing-values.html#cb38-1" aria-hidden="true" tabindex="-1"></a>airQuality_3NA_Inserted <span class="ot">&lt;-</span> airQuality_3NA_Inserted[<span class="sc">!</span>(<span class="fu">rowSums</span>(<span class="fu">is.na</span>(airQuality_3NA_Inserted)) <span class="sc">&gt;=</span> <span class="dv">3</span>), ]</span>
+<span id="cb38-2"><a href="missing-values.html#cb38-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-3"><a href="missing-values.html#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">&quot;number of rows in airQuality_3NA_Inserted after dropping is &quot;</span>, <span class="fu">nrow</span>(airQuality_3NA_Inserted)))</span></code></pre></div>
+<pre><code>## [1] &quot;number of rows in airQuality_3NA_Inserted after dropping is 153&quot;</code></pre>
+<p>We have drop all 3 rows with at least 3 NA, so the size of airQuality_3NA_Inserted drops from 156 to 153.</p>
+</div>
+</div>
+</div>
+<div id="impute" class="section level2 hasAnchor" number="4.2">
+<h2><span class="header-section-number">4.2</span> Impute<a href="missing-values.html#impute" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Dropping rows is a straight forward approach. However, dropping too many drows would induce huge data loss, which would be detrimental to our task. We can insert values we specify into entries with missing values. This will minimize data loss. Though we would never know if imputed values could reflect the true pattern of the data.
+We first install package we will use:</p>
+<div id="numerical" class="section level3 hasAnchor" number="4.2.1">
+<h3><span class="header-section-number">4.2.1</span> Numerical<a href="missing-values.html#numerical" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="impute-with-constant" class="section level4 hasAnchor" number="4.2.1.1">
+<h4><span class="header-section-number">4.2.1.1</span> Impute with constant<a href="missing-values.html#impute-with-constant" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>For a column with missing value,we select a constant we think will reflect the real data and fill missing entry in the column with the constant we have selected.</p>
+<p>Let’s say we use constant 30 to fill “Ozone” entries with missing values.</p>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="missing-values.html#cb40-1" aria-hidden="true" tabindex="-1"></a>airQuality_const_filled <span class="ot">&lt;-</span> airQuality_preProcessing</span>
+<span id="cb40-2"><a href="missing-values.html#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">&quot;number of missing values in Ozone column is &quot;</span>, <span class="fu">sum</span>(<span class="fu">is.na</span>(airQuality_const_filled<span class="sc">$</span>Ozone))))</span></code></pre></div>
+<pre><code>## [1] &quot;number of missing values in Ozone column is 37&quot;</code></pre>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="missing-values.html#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(airQuality_const_filled , <span class="dv">5</span>)</span></code></pre></div>
+<pre><code>##   Ozone Solar.R Wind Temp Month Day
+## 1    41     190  7.4   67     5   1
+## 2    36     118  8.0   72     5   2
+## 3    12     149 12.6   74     5   3
+## 4    18     313 11.5   62     5   4
+## 5    NA      NA 14.3   56     5   5</code></pre>
+<p>We now fill:</p>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="missing-values.html#cb44-1" aria-hidden="true" tabindex="-1"></a>airQuality_const_filled<span class="sc">$</span>Ozone <span class="ot">&lt;-</span> <span class="fu">na_replace</span>(airQuality_const_filled<span class="sc">$</span>Ozone, <span class="at">fill =</span> <span class="dv">30</span>, <span class="at">maxgap =</span> <span class="cn">Inf</span>)</span>
+<span id="cb44-2"><a href="missing-values.html#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">&quot;number of missing values in Ozone column is &quot;</span>, <span class="fu">sum</span>(<span class="fu">is.na</span>(airQuality_const_filled<span class="sc">$</span>Ozone))))</span></code></pre></div>
+<pre><code>## [1] &quot;number of missing values in Ozone column is 0&quot;</code></pre>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="missing-values.html#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(airQuality_const_filled , <span class="dv">5</span>)</span></code></pre></div>
+<pre><code>##   Ozone Solar.R Wind Temp Month Day
+## 1    41     190  7.4   67     5   1
+## 2    36     118  8.0   72     5   2
+## 3    12     149 12.6   74     5   3
+## 4    18     313 11.5   62     5   4
+## 5    30      NA 14.3   56     5   5</code></pre>
+<p>We see NA in Ozone column of row 5 is imputed by constant 30.</p>
+<ul>
+<li>Pro
+<ul>
+<li>Easy to understand.</li>
+</ul></li>
+<li>Con
+<ul>
+<li>Value assigned by human intuition is too arbitrary and might be unrealistic.</li>
+</ul></li>
+</ul>
+</div>
+<div id="impute-with-sample-statistics" class="section level4 hasAnchor" number="4.2.1.2">
+<h4><span class="header-section-number">4.2.1.2</span> Impute with Sample statistics<a href="missing-values.html#impute-with-sample-statistics" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>We can impute missing values in a column using sample statistics of the columns such as mean and median. This way we fill the missing value and does not alter data statistics in the column. We now fill “Ozone” column with current “Mean” of “Ozone” column and “Solar.R” with median of “Solar.R” column. Note the “na.rm = True” arguement is to neglect missing value when computing sample statistics so that we get a real value answer.</p>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="missing-values.html#cb48-1" aria-hidden="true" tabindex="-1"></a>airQuality_sstat_impute <span class="ot">&lt;-</span> airQuality_preProcessing</span>
+<span id="cb48-2"><a href="missing-values.html#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">&quot;Mean of Ozone before impute is &quot;</span>, <span class="fu">mean</span>(airQuality_sstat_impute<span class="sc">$</span>Ozone, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)))</span></code></pre></div>
+<pre><code>## [1] &quot;Mean of Ozone before impute is 42.1293103448276&quot;</code></pre>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="missing-values.html#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">&quot;Median of Solar.R before impute is &quot;</span>, <span class="fu">median</span>(airQuality_sstat_impute<span class="sc">$</span>Solar.R, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)))</span></code></pre></div>
+<pre><code>## [1] &quot;Median of Solar.R before impute is 205&quot;</code></pre>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="missing-values.html#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">&quot;number of missing values in Ozone column before impute is &quot;</span>, <span class="fu">sum</span>(<span class="fu">is.na</span>(airQuality_sstat_impute<span class="sc">$</span>Ozone))))</span></code></pre></div>
+<pre><code>## [1] &quot;number of missing values in Ozone column before impute is 37&quot;</code></pre>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="missing-values.html#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">&quot;number of missing values in Solar.R column before impute is &quot;</span>, <span class="fu">sum</span>(<span class="fu">is.na</span>(airQuality_sstat_impute<span class="sc">$</span>Solar.R))))</span></code></pre></div>
+<pre><code>## [1] &quot;number of missing values in Solar.R column before impute is 7&quot;</code></pre>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="missing-values.html#cb56-1" aria-hidden="true" tabindex="-1"></a>airQuality_sstat_impute<span class="sc">$</span>Ozone <span class="ot">&lt;-</span> <span class="fu">na_mean</span>(airQuality_sstat_impute<span class="sc">$</span>Ozone, <span class="at">option =</span> <span class="st">&quot;mean&quot;</span>, <span class="at">maxgap =</span> <span class="cn">Inf</span>)</span>
+<span id="cb56-2"><a href="missing-values.html#cb56-2" aria-hidden="true" tabindex="-1"></a>airQuality_sstat_impute<span class="sc">$</span>Solar.R <span class="ot">&lt;-</span> <span class="fu">na_mean</span>(airQuality_sstat_impute<span class="sc">$</span>Solar, <span class="at">option =</span> <span class="st">&quot;median&quot;</span>, <span class="at">maxgap =</span> <span class="cn">Inf</span>)</span>
+<span id="cb56-3"><a href="missing-values.html#cb56-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">&#39;   &#39;</span>)</span></code></pre></div>
+<pre><code>## [1] &quot;   &quot;</code></pre>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="missing-values.html#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">&quot;Mean of Ozone after impute is &quot;</span>, <span class="fu">mean</span>(airQuality_sstat_impute<span class="sc">$</span>Ozone)))</span></code></pre></div>
+<pre><code>## [1] &quot;Mean of Ozone after impute is 42.1293103448276&quot;</code></pre>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="missing-values.html#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">&quot;Median of Solar.R after impute is &quot;</span>, <span class="fu">median</span>(airQuality_sstat_impute<span class="sc">$</span>Solar.R)))</span></code></pre></div>
+<pre><code>## [1] &quot;Median of Solar.R after impute is 205&quot;</code></pre>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="missing-values.html#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">&quot;number of missing values in Ozone column after impute is &quot;</span>, <span class="fu">sum</span>(<span class="fu">is.na</span>(airQuality_sstat_impute<span class="sc">$</span>Ozone))))</span></code></pre></div>
+<pre><code>## [1] &quot;number of missing values in Ozone column after impute is 0&quot;</code></pre>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="missing-values.html#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">&quot;number of missing values in Solar.R column after impute is &quot;</span>, <span class="fu">sum</span>(<span class="fu">is.na</span>(airQuality_sstat_impute<span class="sc">$</span>Solar.R))))</span></code></pre></div>
+<pre><code>## [1] &quot;number of missing values in Solar.R column after impute is 0&quot;</code></pre>
+<p>We see we no longer have missing values in both columns and mean in “Ozone” column and median in “Solar.R” are both unchanging from before the impute.</p>
+<ul>
+<li>Pro
+<ul>
+<li>Easy to understand.</li>
+<li>Does not change sample statistics</li>
+</ul></li>
+<li>Con
+<ul>
+<li>Maybe the distribution of valid values in columns are skewed to left or right or have many outliers such that sample statistics do not reflect actual pattern of data</li>
+</ul></li>
+</ul>
+</div>
+<div id="impute-by-value-adjacent-to-missing-value" class="section level4 hasAnchor" number="4.2.1.3">
+<h4><span class="header-section-number">4.2.1.3</span> Impute by value adjacent to Missing value<a href="missing-values.html#impute-by-value-adjacent-to-missing-value" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>Often in time-series data, value on a time point is highly assosicated with most adjacent valid values. Therefore, we want to fill a missing entries using valid data values before or after it.</p>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="missing-values.html#cb66-1" aria-hidden="true" tabindex="-1"></a>airQuality_Adjacent_impute <span class="ot">&lt;-</span> airQuality_preProcessing</span>
+<span id="cb66-2"><a href="missing-values.html#cb66-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(airQuality_Adjacent_impute, <span class="dv">10</span>)</span></code></pre></div>
+<pre><code>##    Ozone Solar.R Wind Temp Month Day
+## 1     41     190  7.4   67     5   1
+## 2     36     118  8.0   72     5   2
+## 3     12     149 12.6   74     5   3
+## 4     18     313 11.5   62     5   4
+## 5     NA      NA 14.3   56     5   5
+## 6     28      NA 14.9   66     5   6
+## 7     23     299  8.6   65     5   7
+## 8     19      99 13.8   59     5   8
+## 9      8      19 20.1   61     5   9
+## 10    NA     194  8.6   69     5  10</code></pre>
+<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="missing-values.html#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">&#39;We first fill missing values in Ozone column with last observed valid value&#39;</span>)</span></code></pre></div>
+<pre><code>## [1] &quot;We first fill missing values in Ozone column with last observed valid value&quot;</code></pre>
+<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="missing-values.html#cb70-1" aria-hidden="true" tabindex="-1"></a>airQuality_Adjacent_impute<span class="sc">$</span>Ozone <span class="ot">&lt;-</span> <span class="fu">na_locf</span>(airQuality_Adjacent_impute<span class="sc">$</span>Ozone, <span class="at">option =</span> <span class="st">&quot;locf&quot;</span>)</span>
+<span id="cb70-2"><a href="missing-values.html#cb70-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">&#39;We then fill missing values in Solar.R column with next observed valid value&#39;</span>)</span></code></pre></div>
+<pre><code>## [1] &quot;We then fill missing values in Solar.R column with next observed valid value&quot;</code></pre>
+<div class="sourceCode" id="cb72"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb72-1"><a href="missing-values.html#cb72-1" aria-hidden="true" tabindex="-1"></a>airQuality_Adjacent_impute<span class="sc">$</span>Solar.R <span class="ot">&lt;-</span> <span class="fu">na_locf</span>(airQuality_Adjacent_impute<span class="sc">$</span>Solar.R, <span class="at">option =</span> <span class="st">&quot;nocb&quot;</span>)</span>
+<span id="cb72-2"><a href="missing-values.html#cb72-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(airQuality_Adjacent_impute, <span class="dv">10</span>)</span></code></pre></div>
+<pre><code>##    Ozone Solar.R Wind Temp Month Day
+## 1     41     190  7.4   67     5   1
+## 2     36     118  8.0   72     5   2
+## 3     12     149 12.6   74     5   3
+## 4     18     313 11.5   62     5   4
+## 5     18     299 14.3   56     5   5
+## 6     28     299 14.9   66     5   6
+## 7     23     299  8.6   65     5   7
+## 8     19      99 13.8   59     5   8
+## 9      8      19 20.1   61     5   9
+## 10     8     194  8.6   69     5  10</code></pre>
+<p>If we have missing value at beginning or end of data frame, which is rare, we can remedy using “na_remaining” argument in “na_locf()” to handle remaining missing value after filling. More details can be found in imputeTS documentation.</p>
+<ul>
+<li>Pro
+<ul>
+<li>Easy to understand.</li>
+<li>Does not change sample statistics</li>
+</ul></li>
+<li>Con
+<ul>
+<li>Maybe the distribution of valid values in columns are skewed to left or right or have many outliers such that sample statistics do not reflect actual pattern of data</li>
+</ul></li>
+</ul>
+</div>
+<div id="impute-using-predicative-model" class="section level4 hasAnchor" number="4.2.1.4">
+<h4><span class="header-section-number">4.2.1.4</span> Impute using predicative model<a href="missing-values.html#impute-using-predicative-model" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>If we believe certain features in the data frame depends on some other features, we can use other features to fit a predicative model to predict missing value in certain feature. We need to make sure the “other features” our prediction is based on are all valid entries, which we need to impute using some method. We now assume “Ozone” and “Solar.R” features depends on climate related features such as “Wind” and “Temperature”, and we build linear regression models for “Ozone” and “Solar.R” based on “Wind” and “Temperature”.</p>
+<div class="sourceCode" id="cb74"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb74-1"><a href="missing-values.html#cb74-1" aria-hidden="true" tabindex="-1"></a>airQuality_lm_impute <span class="ot">&lt;-</span> airQuality_preProcessing</span>
+<span id="cb74-2"><a href="missing-values.html#cb74-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb74-3"><a href="missing-values.html#cb74-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb74-4"><a href="missing-values.html#cb74-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(airQuality_lm_impute, <span class="dv">10</span>)</span></code></pre></div>
+<pre><code>##    Ozone Solar.R Wind Temp Month Day
+## 1     41     190  7.4   67     5   1
+## 2     36     118  8.0   72     5   2
+## 3     12     149 12.6   74     5   3
+## 4     18     313 11.5   62     5   4
+## 5     NA      NA 14.3   56     5   5
+## 6     28      NA 14.9   66     5   6
+## 7     23     299  8.6   65     5   7
+## 8     19      99 13.8   59     5   8
+## 9      8      19 20.1   61     5   9
+## 10    NA     194  8.6   69     5  10</code></pre>
+<div class="sourceCode" id="cb76"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb76-1"><a href="missing-values.html#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Ozone_valid &lt;- airQuality_lm_impute[!is.na(airQuality_lm_impute$Ozone), c(&#39;Ozone&#39;, &#39;Wind&#39;, &#39;Temp&#39;)]</span></span>
+<span id="cb76-2"><a href="missing-values.html#cb76-2" aria-hidden="true" tabindex="-1"></a><span class="co">#Solar_valid &lt;- airQuality_lm_impute[!is.na(airQuality_lm_impute$Solar.R), c(&#39;Solar.R&#39;, &#39;Wind&#39;, &#39;Temp&#39;)]</span></span>
+<span id="cb76-3"><a href="missing-values.html#cb76-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb76-4"><a href="missing-values.html#cb76-4" aria-hidden="true" tabindex="-1"></a>linear_model_Ozone <span class="ot">&lt;-</span> <span class="fu">lm</span>(Ozone <span class="sc">~</span> Wind <span class="sc">+</span> Temp, <span class="at">data =</span> airQuality_lm_impute)</span>
+<span id="cb76-5"><a href="missing-values.html#cb76-5" aria-hidden="true" tabindex="-1"></a>linear_model_Solar.R <span class="ot">&lt;-</span> <span class="fu">lm</span>(Solar.R <span class="sc">~</span> Wind <span class="sc">+</span> Temp, <span class="at">data =</span> airQuality_lm_impute)</span>
+<span id="cb76-6"><a href="missing-values.html#cb76-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb76-7"><a href="missing-values.html#cb76-7" aria-hidden="true" tabindex="-1"></a>airQuality_lm_impute<span class="sc">$</span>Ozone[<span class="fu">is.na</span>(airQuality_lm_impute<span class="sc">$</span>Ozone)] <span class="ot">&lt;-</span> <span class="fu">predict</span>(linear_model_Ozone, </span>
+<span id="cb76-8"><a href="missing-values.html#cb76-8" aria-hidden="true" tabindex="-1"></a>                                                                         <span class="at">newdata =</span> airQuality_lm_impute[<span class="fu">is.na</span>(airQuality_lm_impute<span class="sc">$</span>Ozone),<span class="fu">c</span>(<span class="st">&#39;Wind&#39;</span>, <span class="st">&#39;Temp&#39;</span>)])</span>
+<span id="cb76-9"><a href="missing-values.html#cb76-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb76-10"><a href="missing-values.html#cb76-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb76-11"><a href="missing-values.html#cb76-11" aria-hidden="true" tabindex="-1"></a>airQuality_lm_impute<span class="sc">$</span>Solar.R[<span class="fu">is.na</span>(airQuality_lm_impute<span class="sc">$</span>Solar.R)] <span class="ot">&lt;-</span> <span class="fu">predict</span>(linear_model_Solar.R, </span>
+<span id="cb76-12"><a href="missing-values.html#cb76-12" aria-hidden="true" tabindex="-1"></a>                                                                         <span class="at">newdata =</span> airQuality_lm_impute[<span class="fu">is.na</span>(airQuality_lm_impute<span class="sc">$</span>Solar.R),<span class="fu">c</span>(<span class="st">&#39;Wind&#39;</span>, <span class="st">&#39;Temp&#39;</span>)])</span>
+<span id="cb76-13"><a href="missing-values.html#cb76-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb76-14"><a href="missing-values.html#cb76-14" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(airQuality_lm_impute, <span class="dv">10</span>)</span></code></pre></div>
+<pre><code>##        Ozone  Solar.R Wind Temp Month Day
+## 1   41.00000 190.0000  7.4   67     5   1
+## 2   36.00000 118.0000  8.0   72     5   2
+## 3   12.00000 149.0000 12.6   74     5   3
+## 4   18.00000 313.0000 11.5   62     5   4
+## 5  -11.67673 127.4317 14.3   56     5   5
+## 6   28.00000 159.5042 14.9   66     5   6
+## 7   23.00000 299.0000  8.6   65     5   7
+## 8   19.00000  99.0000 13.8   59     5   8
+## 9    8.00000  19.0000 20.1   61     5   9
+## 10  29.66190 194.0000  8.6   69     5  10</code></pre>
+<p>Since the original data are integer, We now convert “Ozone” and “Solar.R” back to integer from double.</p>
+<div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb78-1"><a href="missing-values.html#cb78-1" aria-hidden="true" tabindex="-1"></a>airQuality_lm_impute<span class="sc">$</span>Ozone <span class="ot">&lt;-</span> <span class="fu">as.integer</span>(airQuality_lm_impute<span class="sc">$</span>Ozone)</span>
+<span id="cb78-2"><a href="missing-values.html#cb78-2" aria-hidden="true" tabindex="-1"></a>airQuality_lm_impute<span class="sc">$</span>Solar.R <span class="ot">&lt;-</span> <span class="fu">as.integer</span>(airQuality_lm_impute<span class="sc">$</span>Solar.R)</span>
+<span id="cb78-3"><a href="missing-values.html#cb78-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(airQuality_lm_impute, <span class="dv">10</span>)</span></code></pre></div>
+<pre><code>##    Ozone Solar.R Wind Temp Month Day
+## 1     41     190  7.4   67     5   1
+## 2     36     118  8.0   72     5   2
+## 3     12     149 12.6   74     5   3
+## 4     18     313 11.5   62     5   4
+## 5    -11     127 14.3   56     5   5
+## 6     28     159 14.9   66     5   6
+## 7     23     299  8.6   65     5   7
+## 8     19      99 13.8   59     5   8
+## 9      8      19 20.1   61     5   9
+## 10    29     194  8.6   69     5  10</code></pre>
+<div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb80-1"><a href="missing-values.html#cb80-1" aria-hidden="true" tabindex="-1"></a>linear_model_Ozone </span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Ozone ~ Wind + Temp, data = airQuality_lm_impute)
+## 
+## Coefficients:
+## (Intercept)         Wind         Temp  
+##     -71.033       -3.055        1.840</code></pre>
+<div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb82-1"><a href="missing-values.html#cb82-1" aria-hidden="true" tabindex="-1"></a>linear_model_Solar.R</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Solar.R ~ Wind + Temp, data = airQuality_lm_impute)
+## 
+## Coefficients:
+## (Intercept)         Wind         Temp  
+##     -76.362        2.211        3.075</code></pre>
+<p>We have now filled missing values using linear regresison model prediction from valid values from other columns.</p>
+
+</div>
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="duplicated-values.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="interactive-component.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://https://github.com/semi-literatedengineeringstudent/Gr5702Fa2022YuduChenCC/edit/main/Missing_values.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": "https://https://github.com/semi-literatedengineeringstudent/Gr5702Fa2022YuduChenCC/blob/main/Missing_values.Rmd",
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>

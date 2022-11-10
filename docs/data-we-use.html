@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Data cleaning using R</title>
-  <meta name="description" content="Data cleaning using R" />
+  <title>Chapter 2 Data we use | Data cleaning using R</title>
+  <meta name="description" content="Chapter 2 Data we use | Data cleaning using R" />
   <meta name="generator" content="bookdown 0.29 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Data cleaning using R" />
+  <meta property="og:title" content="Chapter 2 Data we use | Data cleaning using R" />
   <meta property="og:type" content="book" />
   
   
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Data cleaning using R" />
+  <meta name="twitter:title" content="Chapter 2 Data we use | Data cleaning using R" />
   
   
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-
-<link rel="next" href="data-we-use.html"/>
+<link rel="prev" href="index.html"/>
+<link rel="next" href="duplicated-values.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -174,16 +174,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="header">
-<h1 class="title">Data cleaning using R</h1>
-<p class="author"><em>Yudu Chen Yc4142</em></p>
-<p class="date"><em>2022-11-08</em></p>
-</div>
-<div id="data-cleaning-with-r" class="section level1 hasAnchor" number="1">
-<h1><span class="header-section-number">Chapter 1</span> Data cleaning with R<a href="index.html#data-cleaning-with-r" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<p>In the real world, the data sets we are handling are often not data scientists can readily use. They might contain duplicate entries when entries are supposed to be unique. They might contain missing values, which is problematic for tasks such as training predicative modeling. The data features might be at vastly different scale, which both induces instability of float point arithmatics and inaccurate measurement of feature importance in training machine learning model. We will discuss how to use R to clean Data sets where situations above take place.</p>
-<p>We first import libraries we will use:</p>
-<p>readr package is used to gain a glimpse of data set we will clean.</p>
+<div id="data-we-use" class="section level1 hasAnchor" number="2">
+<h1><span class="header-section-number">Chapter 2</span> Data we use<a href="data-we-use.html#data-we-use" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>We will explore techniques of data cleaning using “Airquality” dataset from R, which already has some missing values in it. The dataset is available in baseR and does not require import from outside source.</p>
+<pre><code>##    Ozone Solar.R Wind Temp Month Day
+## 1     41     190  7.4   67     5   1
+## 2     36     118  8.0   72     5   2
+## 3     12     149 12.6   74     5   3
+## 4     18     313 11.5   62     5   4
+## 5     NA      NA 14.3   56     5   5
+## 6     28      NA 14.9   66     5   6
+## 7     23     299  8.6   65     5   7
+## 8     19      99 13.8   59     5   8
+## 9      8      19 20.1   61     5   9
+## 10    NA     194  8.6   69     5  10</code></pre>
 
 </div>
             </section>
@@ -191,8 +195,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           </div>
         </div>
       </div>
-
-<a href="data-we-use.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="duplicated-values.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -223,7 +227,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://https://github.com/semi-literatedengineeringstudent/Gr5702Fa2022YuduChenCC/edit/main/index.Rmd",
+"link": "https://https://github.com/semi-literatedengineeringstudent/Gr5702Fa2022YuduChenCC/edit/main/data.Rmd",
 "text": "Edit"
 },
 "history": {
@@ -231,7 +235,7 @@ gitbook.start({
 "text": null
 },
 "view": {
-"link": "https://https://github.com/semi-literatedengineeringstudent/Gr5702Fa2022YuduChenCC/blob/main/index.Rmd",
+"link": "https://https://github.com/semi-literatedengineeringstudent/Gr5702Fa2022YuduChenCC/blob/main/data.Rmd",
 "text": null
 },
 "download": null,

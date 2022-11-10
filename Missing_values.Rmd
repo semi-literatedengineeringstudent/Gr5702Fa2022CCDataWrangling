@@ -1,0 +1,263 @@
+# Missing Values
+Encountering missing data in dataset is not uncommon. When collecting temperature data the sensor might be broken and unable to measure temperature. When conduct public opinion surveying, the interviewee might forget filling entires on questionaires. Many data science job requires completeness of data, such as training predicative model based on numerical/categorical data. We will now discuss doing data cleaning in R.
+
+We will use 'tidyr' library for this task:
+
+```{r, echo = TRUE}
+library(tidyr)
+```
+
+## NA in R
+In R, a missing value is represented by symbol "NA". 
+```{r, echo = TRUE}
+head(airquality, 10)
+```
+We can observe, at index 5, the instance has missing value in "Ozone" and "Solar.R" feasure, represented by symbol "NA".
+## Dropping rows with missing data
+A simple approach is to drop rows with missing data. If our task requires using all features in dataset, we can opt to drop all rows with at least one missing value. However, if our task required using some features, we only need to drop rows with missing values in feastures we specify. We will discuss both cases. 
+### Drop all rows containing missing Data
+Suppose we want to use all features in "airquality" dataset and we want to drop all rows with at least 1 missing values. We first check number of rows with missing data in the dataset. The 'is.na(df)' command returns a boolean array, where truth value at each index indicate if data element at the same index in data frame df is NA or not. By summing number of "TRUE" values in the 'is.na(df)', we know total number of missing values in the data set.
+
+```{r, echo = TRUE}
+sum(is.na(airQuality_preProcessing))
+
+```
+We see we have totally 44 missing  with at least 1 missing values.
+To know number of rows with missing value, we use "complete.cases(df)". The return an array of boolean where boolean value at each index indicate if data instance/case at the corresponding row index in dataset df is complete (having no NA the missing valye) or not. By summing the number of false in the array, we get the total number of rows that has at least 1 missing value.
+```{r, echo = TRUE}
+sum(!complete.cases(airQuality_preProcessing))
+```
+To visualize all rows with missing value:
+```{r, echo = TRUE, eval=FALSE}
+airQuality_preProcessing[!complete.cases(airQuality_preProcessing), ]
+```
+We now remove rows with na. We use "drop_na()" function from tidyr library to remove all rows with missing values. There are multipe ways to drop rows with missing value, but we will not go exhaustive on this.
+
+```{r, echo = TRUE}
+airQuality_na_droped <- airQuality_preProcessing %>% drop_na()
+sum(is.na(airQuality_na_droped))
+nrow(airQuality_na_droped)
+```
+After removing all 42 rows with missing values, we only have 111 rows left, with 42 rows removed from total 153 rows in original data frame. 
+
+### Drop rows with missing data in specified columns
+
+#### NA in single column
+We can see dropping all columns with missing data could be wasteful if we don't use all features in the dataset. For example, if our job does not require feature "Ozone", we don't really care if "Ozone" value is missing or not as it is irrelevant to our task. We will explore how to drop rows with na in specific columns.
+
+We see "is.na(df)" evaluate presence of NA(missing value) in the entire data set. If we change its argument from df, the entire data set, into a specific column, the function will only evaluate specific columns in the data set and return a boolean array that only reflects presence of missing value at the columns. For example, if we want to see number of rows with missing value in "Ozone" column:
+```{r, echo = TRUE}
+sum(is.na(airQuality_preProcessing$Ozone))
+```
+There are 37 rows with NA in "Ozone" column. To drop rows with missing value in "Ozone", we put column name "Ozone" as argument:
+```{r, echo = TRUE}
+airQuality_na_droped_Ozone <- airQuality_preProcessing %>% drop_na(Ozone)
+nrow(airQuality_na_droped_Ozone)
+```
+37 rows are extracted from 153 columns, resulting in 116 rows.
+
+#### NA in several columns (And)
+
+If we want to drop rows with NA in specific column, for example, rows with NA in both "Ozone" and "Solar.R" columns, we can take advantage of the fact that "is.na(df)" is a boolean array, and we can perform element wise boolean operation in two arrays of same dimension:
+
+```{r, echo = TRUE}
+sum(is.na(airQuality_preProcessing$Ozone) & is.na(airQuality_preProcessing$Solar.R))
+```
+We see number of rows with missing value in both "Ozone" and "Solar.R" is 2. We now visualize two rows:
+```{r, echo = TRUE}
+airQuality_preProcessing[is.na(airQuality_preProcessing$Ozone) & is.na(airQuality_preProcessing$Solar.R), ]
+```
+Having the boolean array, we can negate the logics and obtain all rows where we don't have missing values in "Ozone" and "Solar.R" at the same time.
+
+```{r, echo = TRUE}
+airQuality_NA_Ozone_and_Solor <- airQuality_preProcessing[!(is.na(airQuality_preProcessing$Ozone) & is.na(airQuality_preProcessing$Solar.R)), ]
+nrow(airQuality_NA_Ozone_and_Solor)
+```
+We have droped two rows from 153 rows in original dataset, so we have 151 rows left. 
+
+#### NA in several columns (Or)
+What if we want to drop columns with NA in "Ozone" or "Solar.R", such that if any of the two columns contains missing values.  We could have used boolean operation between several boolean arrays as we did, but it could be tedious as we have more feastures to consider. We could use "complete.cases()" but use specific columns in dataset as input. The "complete.cases()" returns false if a single column in the rows in data frame we pass in has a missing value, so we could perform "or" operation with it. 
+```{r, echo = TRUE}
+sum(!(complete.cases(airQuality_preProcessing[,c("Ozone","Solar.R")])))
+```
+There are 42 rows with missing values in either "Ozone" or "Solar.R", or both. In fact, missing values only appear in those two columns, such that we get the total number of rows with missing values in the data set. We can obtain all datas that does not having missing value in "Ozone" or "Solar.R".
+```{r, echo = TRUE}
+airQuality_NA_Ozone_or_Solor<- airQuality_preProcessing[(complete.cases(airQuality_preProcessing[,c("Ozone","Solar.R")])), ]
+nrow(airQuality_NA_Ozone_or_Solor)
+```
+We have 111 rows after removing 42 rows with missing value on either "Ozone" or "Solar.R"
+
+We can also use drop_na() to with columns specified in function arguement:
+```{r, echo = TRUE}
+airQuality_NA_Ozone_or_Solor<- airQuality_preProcessing %>% drop_na(c("Ozone", "Solar.R"))
+nrow(airQuality_NA_Ozone_or_Solor)
+```
+#### Drop columns with certain number of NA
+This might be uncommon, but we might want to drop rows with more than certain number of NA, such as rows with more than 3 NA and even rows with number of NA equal to number of columns, which means the row has all column value being NA. To know number of NA in each row, we can use "rowSums()" functions:
+```{r, echo = TRUE}
+head(rowSums(is.na(airQuality_preProcessing)),10)
+```
+This means for row 1 to row 10, row 5 has 2 NA and row 6 and 10 has 1 NA. We can drop all rows with number of NA above certain threshold. We now insert 3 rows with 3 NA into the data frame.
+```{r, echo = TRUE}
+airQuality_3NA_Inserted <- airQuality_preProcessing
+for (i in 1: 3)
+{
+  Ozone <- floor(runif(1,min = 0, max = 50))
+  Solor <- floor(runif(1,min = 0, max = 300))
+  Wind <- round(runif(1,min = 0, max = 20), 2)
+  Temp <- floor(runif(1,min = 0, max = 20))
+  
+  random_index = floor(runif(1, min = 1, max = nrow(airQuality_3NA_Inserted)))
+  
+  Month <- airQuality_3NA_Inserted [random_index, 'Month']
+  Day <- airQuality_3NA_Inserted [random_index, 'Day']
+  
+  
+  toInsert <- c(Ozone, Solor, Wind, Temp, Month, Day)
+  for (i in 1:3) {
+    random_index = floor(runif(1, min = 1, max = 6))
+    if (is.na(toInsert[random_index])) {
+      random_index = floor(runif(1, min = 1, max = 6))
+    }
+    toInsert <- replace(toInsert, random_index, NA)
+  }
+
+  airQuality_3NA_Inserted [nrow(airQuality_3NA_Inserted )+1,] <- toInsert
+  
+  
+}
+tail(airQuality_3NA_Inserted, 3)
+print(paste('number of rows in airQuality_3NA_Inserted is', nrow(airQuality_3NA_Inserted)))
+
+```
+Now last 3 rows have 3 NA at tail of airQuality_3NA_Inserted. We now check number of rows with more than or equal to 3 NA:
+
+
+```{r, echo = TRUE}
+print(paste0("number of rows with at least 3 NA in airQuality_3NA_Inserted is ", sum(rowSums(is.na(airQuality_3NA_Inserted)) >= 3)))
+
+```
+Now we have 3 rows with at least 3 NA. We now drop rows with at least 3 NA from airQuality_3NA_Inserted by selecting rows with NA less than 3 and reset reference of airQuality_3NA_Inserted:
+```{r, echo = TRUE}
+airQuality_3NA_Inserted <- airQuality_3NA_Inserted[!(rowSums(is.na(airQuality_3NA_Inserted)) >= 3), ]
+
+print(paste0("number of rows in airQuality_3NA_Inserted after dropping is ", nrow(airQuality_3NA_Inserted)))
+```
+We have drop all 3 rows with at least 3 NA, so the size of airQuality_3NA_Inserted drops from 156 to 153.
+
+## Impute
+Dropping rows is a straight forward approach. However, dropping too many drows would induce huge data loss, which would be detrimental to our task. We can insert values we specify into entries with missing values. This will minimize data loss. Though we would never know if imputed values could reflect the true pattern of the data.
+We first install package we will use:
+
+```{r}
+#install.packages('imputeTS')
+library(imputeTS)
+```
+### Numerical
+
+#### Impute with constant
+For a column with missing value,we select a constant we think will reflect the real data and fill missing entry in the column with the constant we have selected.
+
+Let's say we use constant 30 to fill "Ozone" entries with missing values.
+```{r, echo = TRUE}
+airQuality_const_filled <- airQuality_preProcessing
+print(paste0("number of missing values in Ozone column is ", sum(is.na(airQuality_const_filled$Ozone))))
+head(airQuality_const_filled , 5)
+```
+We now fill:
+```{r, echo = TRUE}
+airQuality_const_filled$Ozone <- na_replace(airQuality_const_filled$Ozone, fill = 30, maxgap = Inf)
+print(paste0("number of missing values in Ozone column is ", sum(is.na(airQuality_const_filled$Ozone))))
+head(airQuality_const_filled , 5)
+```
+We see NA in Ozone column of row 5 is imputed by constant 30.
+
+* Pro
+    + Easy to understand.
+* Con
+    + Value assigned by human intuition is too arbitrary and might be unrealistic.
+    
+#### Impute with Sample statistics
+We can impute missing values in a column using sample statistics of the columns such as mean and median. This way we fill the missing value and does not alter data statistics in the column. We now fill "Ozone" column with current "Mean" of "Ozone" column and "Solar.R" with median of "Solar.R" column. Note the "na.rm = True" arguement is to neglect missing value when computing sample statistics so that we get a real value answer.
+
+```{r, echo = TRUE}
+airQuality_sstat_impute <- airQuality_preProcessing
+print(paste0("Mean of Ozone before impute is ", mean(airQuality_sstat_impute$Ozone, na.rm = TRUE)))
+print(paste0("Median of Solar.R before impute is ", median(airQuality_sstat_impute$Solar.R, na.rm = TRUE)))
+print(paste0("number of missing values in Ozone column before impute is ", sum(is.na(airQuality_sstat_impute$Ozone))))
+print(paste0("number of missing values in Solar.R column before impute is ", sum(is.na(airQuality_sstat_impute$Solar.R))))
+
+airQuality_sstat_impute$Ozone <- na_mean(airQuality_sstat_impute$Ozone, option = "mean", maxgap = Inf)
+airQuality_sstat_impute$Solar.R <- na_mean(airQuality_sstat_impute$Solar, option = "median", maxgap = Inf)
+print('   ')
+
+print(paste0("Mean of Ozone after impute is ", mean(airQuality_sstat_impute$Ozone)))
+print(paste0("Median of Solar.R after impute is ", median(airQuality_sstat_impute$Solar.R)))
+print(paste0("number of missing values in Ozone column after impute is ", sum(is.na(airQuality_sstat_impute$Ozone))))
+print(paste0("number of missing values in Solar.R column after impute is ", sum(is.na(airQuality_sstat_impute$Solar.R))))
+
+```
+We see we no longer have missing values in both columns and mean in "Ozone" column and median in "Solar.R" are both unchanging from before the impute.
+    
+* Pro
+    + Easy to understand.
+    + Does not change sample statistics 
+* Con
+    + Maybe the distribution of valid values in columns are skewed to left or right or have many outliers such that sample statistics do not reflect actual pattern of data
+    
+#### Impute by value adjacent to Missing value
+Often in time-series data, value on a time point is highly assosicated with most adjacent valid values. Therefore, we want to fill a missing entries using valid data values before or after it. 
+```{r, echo = TRUE}
+airQuality_Adjacent_impute <- airQuality_preProcessing
+head(airQuality_Adjacent_impute, 10)
+print('We first fill missing values in Ozone column with last observed valid value')
+airQuality_Adjacent_impute$Ozone <- na_locf(airQuality_Adjacent_impute$Ozone, option = "locf")
+print('We then fill missing values in Solar.R column with next observed valid value')
+airQuality_Adjacent_impute$Solar.R <- na_locf(airQuality_Adjacent_impute$Solar.R, option = "nocb")
+head(airQuality_Adjacent_impute, 10)
+```
+
+If we have missing value at beginning or end of data frame, which is rare, we can remedy using "na_remaining" argument in "na_locf()" to handle remaining missing value after filling. More details can be found in imputeTS documentation.
+
+* Pro
+    + Easy to understand.
+    + Does not change sample statistics 
+* Con
+    + Maybe the distribution of valid values in columns are skewed to left or right or have many outliers such that sample statistics do not reflect actual pattern of data
+    
+
+#### Impute using predicative model
+If we believe certain features in the data frame depends on some other features, we can use other features to fit a predicative model to predict missing value in certain feature. We need to make sure the "other features" our prediction is based on are all valid entries, which we need to impute using some method. We now assume "Ozone" and "Solar.R" features depends on climate related features such as "Wind" and "Temperature", and we build linear regression models for "Ozone" and "Solar.R" based on "Wind" and "Temperature".
+```{r, echo = TRUE}
+airQuality_lm_impute <- airQuality_preProcessing
+
+
+head(airQuality_lm_impute, 10)
+
+#Ozone_valid <- airQuality_lm_impute[!is.na(airQuality_lm_impute$Ozone), c('Ozone', 'Wind', 'Temp')]
+#Solar_valid <- airQuality_lm_impute[!is.na(airQuality_lm_impute$Solar.R), c('Solar.R', 'Wind', 'Temp')]
+
+linear_model_Ozone <- lm(Ozone ~ Wind + Temp, data = airQuality_lm_impute)
+linear_model_Solar.R <- lm(Solar.R ~ Wind + Temp, data = airQuality_lm_impute)
+
+airQuality_lm_impute$Ozone[is.na(airQuality_lm_impute$Ozone)] <- predict(linear_model_Ozone, 
+                                                                         newdata = airQuality_lm_impute[is.na(airQuality_lm_impute$Ozone),c('Wind', 'Temp')])
+
+
+airQuality_lm_impute$Solar.R[is.na(airQuality_lm_impute$Solar.R)] <- predict(linear_model_Solar.R, 
+                                                                         newdata = airQuality_lm_impute[is.na(airQuality_lm_impute$Solar.R),c('Wind', 'Temp')])
+
+head(airQuality_lm_impute, 10)
+```
+
+Since the original data are integer, We now convert "Ozone" and "Solar.R" back to integer from double.
+
+```{r, echo = TRUE}
+airQuality_lm_impute$Ozone <- as.integer(airQuality_lm_impute$Ozone)
+airQuality_lm_impute$Solar.R <- as.integer(airQuality_lm_impute$Solar.R)
+head(airQuality_lm_impute, 10)
+linear_model_Ozone 
+linear_model_Solar.R
+```
+We have now filled missing values using linear regresison model prediction from valid values from other columns.
+

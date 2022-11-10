@@ -4,33 +4,33 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 4 Results | YOUR TITLE HERE</title>
-  <meta name="description" content="Chapter 4 Results | YOUR TITLE HERE" />
+  <title>Chapter 4 Results | Data cleaning using R</title>
+  <meta name="description" content="Chapter 4 Results | Data cleaning using R" />
   <meta name="generator" content="bookdown 0.29 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 4 Results | YOUR TITLE HERE" />
+  <meta property="og:title" content="Chapter 4 Results | Data cleaning using R" />
   <meta property="og:type" content="book" />
   
   
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 4 Results | YOUR TITLE HERE" />
+  <meta name="twitter:title" content="Chapter 4 Results | Data cleaning using R" />
   
   
   
 
-<meta name="author" content="YOUR NAMES HERE" />
+<meta name="author" content="Yudu Chen Yc4142" />
 
 
-<meta name="date" content="2022-10-22" />
+<meta name="date" content="2022-11-08" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="data.html"/>
+<link rel="prev" href="duplicated-values.html"/>
 <link rel="next" href="interactive-component.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
@@ -69,20 +69,15 @@
       <nav role="navigation">
 
 <ul class="summary">
-<li><a href="./">SHORT TITLE HERE</a></li>
+<li><a href="./">DataCleaningW/R</a></li>
 
 <li class="divider"></li>
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
-<li class="chapter" data-level="2" data-path="proposal.html"><a href="proposal.html"><i class="fa fa-check"></i><b>2</b> Proposal</a>
+<li class="chapter" data-level="2" data-path="data-we-use.html"><a href="data-we-use.html"><i class="fa fa-check"></i><b>2</b> Data we use</a></li>
+<li class="chapter" data-level="3" data-path="duplicated-values.html"><a href="duplicated-values.html"><i class="fa fa-check"></i><b>3</b> Duplicated Values</a>
 <ul>
-<li class="chapter" data-level="2.1" data-path="proposal.html"><a href="proposal.html#research-topic"><i class="fa fa-check"></i><b>2.1</b> Research topic</a></li>
-<li class="chapter" data-level="2.2" data-path="proposal.html"><a href="proposal.html#data-availability"><i class="fa fa-check"></i><b>2.2</b> Data availability</a></li>
-</ul></li>
-<li class="chapter" data-level="3" data-path="data.html"><a href="data.html"><i class="fa fa-check"></i><b>3</b> Data</a>
-<ul>
-<li class="chapter" data-level="3.1" data-path="data.html"><a href="data.html#sources"><i class="fa fa-check"></i><b>3.1</b> Sources</a></li>
-<li class="chapter" data-level="3.2" data-path="data.html"><a href="data.html#cleaning-transformation"><i class="fa fa-check"></i><b>3.2</b> Cleaning / transformation</a></li>
-<li class="chapter" data-level="3.3" data-path="data.html"><a href="data.html#missing-value-analysis"><i class="fa fa-check"></i><b>3.3</b> Missing value analysis</a></li>
+<li class="chapter" data-level="3.1" data-path="duplicated-values.html"><a href="duplicated-values.html#data-set-with-row-wise-duplicates"><i class="fa fa-check"></i><b>3.1</b> Data set with row-wise duplicates</a></li>
+<li class="chapter" data-level="3.2" data-path="duplicated-values.html"><a href="duplicated-values.html#duplicates-based-on-specific-columns"><i class="fa fa-check"></i><b>3.2</b> Duplicates based on specific columns</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="results.html"><a href="results.html"><i class="fa fa-check"></i><b>4</b> Results</a></li>
 <li class="chapter" data-level="5" data-path="interactive-component.html"><a href="interactive-component.html"><i class="fa fa-check"></i><b>5</b> Interactive component</a></li>
@@ -98,7 +93,7 @@
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">YOUR TITLE HERE</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Data cleaning using R</a>
           </h1>
         </div>
 
@@ -115,7 +110,7 @@
           </div>
         </div>
       </div>
-<a href="data.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="duplicated-values.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 <a href="interactive-component.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
@@ -147,7 +142,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/YOUR GITHUB USERNAME/YOUR REPO NAME/edit/main/results.Rmd",
+"link": "https://https://github.com/semi-literatedengineeringstudent/Gr5702Fa2022YuduChenCC/edit/main/results.Rmd",
 "text": "Edit"
 },
 "history": {
@@ -155,7 +150,7 @@ gitbook.start({
 "text": null
 },
 "view": {
-"link": "https://github.com/YOUR GITHUB USERNAME/YOUR REPO NAME/blob/main/results.Rmd",
+"link": "https://https://github.com/semi-literatedengineeringstudent/Gr5702Fa2022YuduChenCC/blob/main/results.Rmd",
 "text": null
 },
 "download": null,

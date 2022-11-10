@@ -1,8 +1,13 @@
-# Data 
+# Data we use
+We will explore techniques of data cleaning using "Airquality" dataset from R, which already has some missing values in it. The dataset is available in baseR and does not require import from outside source.
 
-## Sources
+```{r}
+library(readr)
+airQuality_preProcessing <- airquality
 
-## Cleaning / transformation
+head(airQuality_preProcessing, 10)
 
-## Missing value analysis
+```
+
+
 

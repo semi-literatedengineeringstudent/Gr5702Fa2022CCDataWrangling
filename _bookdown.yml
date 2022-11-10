@@ -1,17 +1,17 @@
 book_filename: "finalproj"
 output_dir: docs
 delete_merged_file: true
-edit: https://github.com/YOUR GITHUB USERNAME/YOUR REPO NAME/edit/main/%s
-view: https://github.com/YOUR GITHUB USERNAME/YOUR REPO NAME/blob/main/%s
+edit: https://https://github.com/semi-literatedengineeringstudent/Gr5702Fa2022YuduChenCC/edit/main/%s
+view: https://https://github.com/semi-literatedengineeringstudent/Gr5702Fa2022YuduChenCC/blob/main/%s
 language:
   ui:
     chapter_name: "Chapter "
 
 rmd_files: [
   'index.Rmd',
-  'proposal.Rmd',
   'data.Rmd',
-  'results.Rmd',
+  'Duplicated_values.Rmd',
+  'Missing_values.Rmd',
   'interactive.Rmd',
   'conclusion.Rmd'
   ]

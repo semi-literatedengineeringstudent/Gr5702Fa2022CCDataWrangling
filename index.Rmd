@@ -1,9 +1,24 @@
 --- 
-title: "YOUR TITLE HERE"
-author: "YOUR NAMES HERE"
+title: "Data cleaning using R"
+author: "Yudu Chen Yc4142"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 ---
 
-# Introduction
+# Data cleaning with R
+In the real world, the data sets we are handling are often not data scientists can readily use. They might contain duplicate entries when entries are supposed to be unique. They might contain missing values, which is problematic for tasks such as training predicative modeling. The data features might be at vastly different scale, which both induces instability of float point arithmatics and inaccurate measurement of feature importance in training machine learning model. We will discuss how to use R to clean Data sets where situations above take place. 
+
+We first import libraries we will use:
+
+```{r}
+#install.packages("readr")
+#install.packages("tidyverse")
+```
+```{r}
+library(readr)
+library(tidyverse)
+```
+
+readr package is used to gain a glimpse of data set we will clean.
+
 
