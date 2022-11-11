@@ -8,12 +8,12 @@ Although the dataset we use in this example, airquality data, does not have dupl
 ```{r, echo = TRUE}
 data_duplicated_values = airQuality_preProcessing
 ```
-We see the data set should have no duplicate to begin with.
+We see the data frame should have no duplicate rows to begin with.
 ```{r, echo = TRUE}
-sum(duplicated(data_duplicated_values))
+print(paste0('number of duplicated rows in the data is ',sum(duplicated(data_duplicated_values))))
 ```
 
-Now we randomly pick 5 instances from the dataset to induce duplication
+Now we randomly pick 5 instances from the data frame and insert them into the data frame to induce duplication
 ```{r, , echo = TRUE}
 
 for (i in 1: 5)
@@ -25,10 +25,10 @@ for (i in 1: 5)
 We should now have 5 duplicated instances:
 
 ```{r, echo = TRUE}
-sum(duplicated(data_duplicated_values))
+print(paste0('number of duplicated rows in the data after insertion is ',sum(duplicated(data_duplicated_values))))
 ```
 
-The "duplicated(df)" returns a boolean array where each value at each index indicates if row at the same index in original data set is duplicated or not. We can use 'duplicated(df)" to extract duplicated rows:
+The "duplicated(df)" returns a boolean array where each value at each index indicates if row at the same index in original data frame is duplicated or not. We can use 'duplicated(df)" to extract duplicated rows:
 ```{r, echo = TRUE}
 data_duplicated_values[duplicated(data_duplicated_values),]
 ```
@@ -40,7 +40,7 @@ head(data_duplicated_values[!duplicated(data_duplicated_values),], 10)
 There should be no duplicates
 
 ```{r, echo = TRUE}
-sum(duplicated(data_duplicated_values[!duplicated(data_duplicated_values),]))
+print(paste0('duplicates in data frame formed by unique rows in original data frame is ',sum(duplicated(data_duplicated_values[!duplicated(data_duplicated_values),]))))
 ```
 
 We can create a new reference to the data set with no duplicates. For the purpose of reusing "data_duplicated_values", I will just assign the new reference to itself:

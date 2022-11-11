@@ -19,24 +19,24 @@ A simple approach is to drop rows with missing data. If our task requires using 
 Suppose we want to use all features in "airquality" dataset and we want to drop all rows with at least 1 missing values. We first check number of rows with missing data in the dataset. The 'is.na(df)' command returns a boolean array, where truth value at each index indicate if data element at the same index in data frame df is NA or not. By summing number of "TRUE" values in the 'is.na(df)', we know total number of missing values in the data set.
 
 ```{r, echo = TRUE}
-sum(is.na(airQuality_preProcessing))
+print(paste0('total number of missing values is ', sum(is.na(airQuality_preProcessing))))
 
 ```
 We see we have totally 44 missing  with at least 1 missing values.
-To know number of rows with missing value, we use "complete.cases(df)". The return an array of boolean where boolean value at each index indicate if data instance/case at the corresponding row index in dataset df is complete (having no NA the missing valye) or not. By summing the number of false in the array, we get the total number of rows that has at least 1 missing value.
+To know number of rows with missing value, we use "complete.cases(df)". The return an array of boolean where boolean value at each index indicate if data instance/case at the corresponding row index in data frame  df is complete (having no NA the missing value) or not. By summing the number of false in the array, we get the total number of rows that has at least 1 missing value.
 ```{r, echo = TRUE}
-sum(!complete.cases(airQuality_preProcessing))
+print(paste0("number of rows with at least 1 missing value is ", sum(!complete.cases(airQuality_preProcessing))))
 ```
-To visualize all rows with missing value:
+To visualize all rows with missing value, we can access them using the boolean array from "complete.cases()". Due to large number of rows with missing value, we only put 10 here:
 ```{r, echo = TRUE, eval=FALSE}
-airQuality_preProcessing[!complete.cases(airQuality_preProcessing), ]
+head(airQuality_preProcessing[!complete.cases(airQuality_preProcessing), ], 10)
 ```
-We now remove rows with na. We use "drop_na()" function from tidyr library to remove all rows with missing values. There are multipe ways to drop rows with missing value, but we will not go exhaustive on this.
+We now remove rows with na. We use "drop_na()" function from tidyr library to remove all rows with missing values. There are multiple ways to drop rows with missing value, but we will not go exhaustive on this.
 
 ```{r, echo = TRUE}
 airQuality_na_droped <- airQuality_preProcessing %>% drop_na()
-sum(is.na(airQuality_na_droped))
-nrow(airQuality_na_droped)
+print(paste0("number of missing values after we drop all NA is ",sum(is.na(airQuality_na_droped))))
+print(paste0("number of rows in data frame after extracting rows with NA is ", nrow(airQuality_na_droped)))
 ```
 After removing all 42 rows with missing values, we only have 111 rows left, with 42 rows removed from total 153 rows in original data frame. 
 
@@ -47,12 +47,12 @@ We can see dropping all columns with missing data could be wasteful if we don't 
 
 We see "is.na(df)" evaluate presence of NA(missing value) in the entire data set. If we change its argument from df, the entire data set, into a specific column, the function will only evaluate specific columns in the data set and return a boolean array that only reflects presence of missing value at the columns. For example, if we want to see number of rows with missing value in "Ozone" column:
 ```{r, echo = TRUE}
-sum(is.na(airQuality_preProcessing$Ozone))
+print(paste0('number of NA in Ozone column is ', sum(is.na(airQuality_preProcessing$Ozone))))
 ```
 There are 37 rows with NA in "Ozone" column. To drop rows with missing value in "Ozone", we put column name "Ozone" as argument:
 ```{r, echo = TRUE}
 airQuality_na_droped_Ozone <- airQuality_preProcessing %>% drop_na(Ozone)
-nrow(airQuality_na_droped_Ozone)
+print(nrow(airQuality_na_droped_Ozone))
 ```
 37 rows are extracted from 153 columns, resulting in 116 rows.
 
@@ -210,9 +210,15 @@ Often in time-series data, value on a time point is highly assosicated with most
 ```{r, echo = TRUE}
 airQuality_Adjacent_impute <- airQuality_preProcessing
 head(airQuality_Adjacent_impute, 10)
-print('We first fill missing values in Ozone column with last observed valid value')
+
+```
+We first fill missing values in Ozone column with last observed valid value:
+```{r}
 airQuality_Adjacent_impute$Ozone <- na_locf(airQuality_Adjacent_impute$Ozone, option = "locf")
-print('We then fill missing values in Solar.R column with next observed valid value')
+```
+We then fill missing values in Solar.R column with next observed valid value
+```{r}
+
 airQuality_Adjacent_impute$Solar.R <- na_locf(airQuality_Adjacent_impute$Solar.R, option = "nocb")
 head(airQuality_Adjacent_impute, 10)
 ```
@@ -220,10 +226,10 @@ head(airQuality_Adjacent_impute, 10)
 If we have missing value at beginning or end of data frame, which is rare, we can remedy using "na_remaining" argument in "na_locf()" to handle remaining missing value after filling. More details can be found in imputeTS documentation.
 
 * Pro
-    + Easy to understand.
-    + Does not change sample statistics 
+    + For time series data, using adjacent value that are close could capture time dependent pattern 
+    
 * Con
-    + Maybe the distribution of valid values in columns are skewed to left or right or have many outliers such that sample statistics do not reflect actual pattern of data
+    + If cloested adjacent value is too far away, filling adjacent value would not sustain time dependent pattern. 
     
 
 #### Impute using predicative model
@@ -233,10 +239,13 @@ airQuality_lm_impute <- airQuality_preProcessing
 
 
 head(airQuality_lm_impute, 10)
+print(paste0('number of missing values in Ozone column before impute is ', sum(is.na(airQuality_lm_impute$Ozone))))
 
-#Ozone_valid <- airQuality_lm_impute[!is.na(airQuality_lm_impute$Ozone), c('Ozone', 'Wind', 'Temp')]
-#Solar_valid <- airQuality_lm_impute[!is.na(airQuality_lm_impute$Solar.R), c('Solar.R', 'Wind', 'Temp')]
+print(paste0('number of missing values in Solar.R column before impute is ', sum(is.na(airQuality_lm_impute$Solar.R))))
 
+```
+
+```{r, echo = TRUE}
 linear_model_Ozone <- lm(Ozone ~ Wind + Temp, data = airQuality_lm_impute)
 linear_model_Solar.R <- lm(Solar.R ~ Wind + Temp, data = airQuality_lm_impute)
 
@@ -259,5 +268,18 @@ head(airQuality_lm_impute, 10)
 linear_model_Ozone 
 linear_model_Solar.R
 ```
+
 We have now filled missing values using linear regresison model prediction from valid values from other columns.
+
+```{r}
+print(paste0('number of missing values in Ozone column after impute is ', sum(is.na(airQuality_lm_impute$Ozone))))
+
+print(paste0('number of missing values in Solar.R column after impute is ', sum(is.na(airQuality_lm_impute$Solar.R))))
+```
+* Pro
+    + If the feature predict indeed depend on other features of the data set, the missing value will be replace by values that reflect the true pattern.
+    
+* Con
+    + Depending on what predicative model we use, the training and prediction could be computationally expensive. 
+    + If the feature we predict does not depend on other features in data set we select to construct predicative model, the filled missing value will be mis leading for our future analysis.
 

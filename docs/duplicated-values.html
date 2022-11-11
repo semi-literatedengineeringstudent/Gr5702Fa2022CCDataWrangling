@@ -23,7 +23,7 @@
 <meta name="author" content="Yudu Chen Yc4142" />
 
 
-<meta name="date" content="2022-11-08" />
+<meta name="date" content="2022-11-10" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -150,8 +150,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="4.1.1" data-path="missing-values.html"><a href="missing-values.html#drop-rows-with-missing-data-in-specified-columns"><i class="fa fa-check"></i><b>4.1.1</b> Drop rows with missing data in specified columns</a></li>
 </ul></li>
-<li class="chapter" data-level="4.2" data-path="missing-values.html"><a href="missing-values.html#impute"><i class="fa fa-check"></i><b>4.2</b> Impute</a></li>
-<li class="chapter" data-level="4.3" data-path="missing-values.html"><a href="missing-values.html#infer"><i class="fa fa-check"></i><b>4.3</b> Infer</a></li>
+<li class="chapter" data-level="4.2" data-path="missing-values.html"><a href="missing-values.html#impute"><i class="fa fa-check"></i><b>4.2</b> Impute</a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="missing-values.html"><a href="missing-values.html#numerical"><i class="fa fa-check"></i><b>4.2.1</b> Numerical</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="interactive-component.html"><a href="interactive-component.html"><i class="fa fa-check"></i><b>5</b> Interactive component</a></li>
 <li class="chapter" data-level="6" data-path="conclusion-1.html"><a href="conclusion-1.html"><i class="fa fa-check"></i><b>6</b> Conclusion</a></li>
@@ -180,28 +182,28 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="data-set-with-row-wise-duplicates" class="section level2 hasAnchor" number="3.1">
 <h2><span class="header-section-number">3.1</span> Data set with row-wise duplicates<a href="duplicated-values.html#data-set-with-row-wise-duplicates" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Although the dataset we use in this example, airquality data, does not have duplicate, we will use it illustrate the techniques of handling duplicate data.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="duplicated-values.html#cb2-1" aria-hidden="true" tabindex="-1"></a>data_duplicated_values <span class="ot">=</span> airQuality_preProcessing</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="duplicated-values.html#cb3-1" aria-hidden="true" tabindex="-1"></a>data_duplicated_values <span class="ot">=</span> airQuality_preProcessing</span></code></pre></div>
 <p>We see the data set should have no duplicate to begin with.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="duplicated-values.html#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">duplicated</span>(data_duplicated_values))</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="duplicated-values.html#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">duplicated</span>(data_duplicated_values))</span></code></pre></div>
 <pre><code>## [1] 0</code></pre>
 <p>Now we randomly pick 5 instances from the dataset to induce duplication</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="duplicated-values.html#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span> <span class="dv">5</span>)</span>
-<span id="cb5-2"><a href="duplicated-values.html#cb5-2" aria-hidden="true" tabindex="-1"></a>{</span>
-<span id="cb5-3"><a href="duplicated-values.html#cb5-3" aria-hidden="true" tabindex="-1"></a>  data_duplicated_values[<span class="fu">nrow</span>(data_duplicated_values)<span class="sc">+</span><span class="dv">1</span>,] <span class="ot">=</span> data_duplicated_values[<span class="fu">floor</span>(<span class="fu">runif</span>(<span class="dv">1</span>, <span class="at">min =</span> <span class="dv">1</span>, <span class="at">max =</span> <span class="fu">nrow</span>(data_duplicated_values))),]</span>
-<span id="cb5-4"><a href="duplicated-values.html#cb5-4" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="duplicated-values.html#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span> <span class="dv">5</span>)</span>
+<span id="cb6-2"><a href="duplicated-values.html#cb6-2" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb6-3"><a href="duplicated-values.html#cb6-3" aria-hidden="true" tabindex="-1"></a>  data_duplicated_values[<span class="fu">nrow</span>(data_duplicated_values)<span class="sc">+</span><span class="dv">1</span>,] <span class="ot">=</span> data_duplicated_values[<span class="fu">floor</span>(<span class="fu">runif</span>(<span class="dv">1</span>, <span class="at">min =</span> <span class="dv">1</span>, <span class="at">max =</span> <span class="fu">nrow</span>(data_duplicated_values))),]</span>
+<span id="cb6-4"><a href="duplicated-values.html#cb6-4" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <p>We should now have 5 duplicated instances:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="duplicated-values.html#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">duplicated</span>(data_duplicated_values))</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="duplicated-values.html#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">duplicated</span>(data_duplicated_values))</span></code></pre></div>
 <pre><code>## [1] 5</code></pre>
 <p>The “duplicated(df)” returns a boolean array where each value at each index indicates if row at the same index in original data set is duplicated or not. We can use ’duplicated(df)” to extract duplicated rows:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="duplicated-values.html#cb8-1" aria-hidden="true" tabindex="-1"></a>data_duplicated_values[<span class="fu">duplicated</span>(data_duplicated_values),]</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="duplicated-values.html#cb9-1" aria-hidden="true" tabindex="-1"></a>data_duplicated_values[<span class="fu">duplicated</span>(data_duplicated_values),]</span></code></pre></div>
 <pre><code>##     Ozone Solar.R Wind Temp Month Day
-## 154    73     183  2.8   93     9   3
-## 155   168     238  3.4   81     8  25
-## 156    91     189  4.6   93     9   4
-## 157    80     294  8.6   86     7  24
-## 158     6      78 18.4   57     5  18</code></pre>
+## 154    35      NA  7.4   85     8   5
+## 155    NA     332 13.8   80     6  14
+## 156    78      NA  6.9   86     8   4
+## 157    41     190  7.4   67     5   1
+## 158    97     272  5.7   92     7   9</code></pre>
 <p>By adding “!” before “duplicated(df)”, we can negate logics in “duplicated(df)” and access non duplicate rows as a data frame:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="duplicated-values.html#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(data_duplicated_values[<span class="sc">!</span><span class="fu">duplicated</span>(data_duplicated_values),], <span class="dv">10</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="duplicated-values.html#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(data_duplicated_values[<span class="sc">!</span><span class="fu">duplicated</span>(data_duplicated_values),], <span class="dv">10</span>)</span></code></pre></div>
 <pre><code>##    Ozone Solar.R Wind Temp Month Day
 ## 1     41     190  7.4   67     5   1
 ## 2     36     118  8.0   72     5   2
@@ -214,46 +216,46 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 9      8      19 20.1   61     5   9
 ## 10    NA     194  8.6   69     5  10</code></pre>
 <p>There should be no duplicates</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="duplicated-values.html#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">duplicated</span>(data_duplicated_values[<span class="sc">!</span><span class="fu">duplicated</span>(data_duplicated_values),]))</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="duplicated-values.html#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">duplicated</span>(data_duplicated_values[<span class="sc">!</span><span class="fu">duplicated</span>(data_duplicated_values),]))</span></code></pre></div>
 <pre><code>## [1] 0</code></pre>
 <p>We can create a new reference to the data set with no duplicates. For the purpose of reusing “data_duplicated_values”, I will just assign the new reference to itself:</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="duplicated-values.html#cb14-1" aria-hidden="true" tabindex="-1"></a>data_duplicated_values <span class="ot">=</span> data_duplicated_values[<span class="sc">!</span><span class="fu">duplicated</span>(data_duplicated_values),]</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="duplicated-values.html#cb15-1" aria-hidden="true" tabindex="-1"></a>data_duplicated_values <span class="ot">=</span> data_duplicated_values[<span class="sc">!</span><span class="fu">duplicated</span>(data_duplicated_values),]</span></code></pre></div>
 <p>Now “data_duplicated_values” should have no duplicates:</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="duplicated-values.html#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">duplicated</span>(data_duplicated_values))</span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="duplicated-values.html#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">duplicated</span>(data_duplicated_values))</span></code></pre></div>
 <pre><code>## [1] 0</code></pre>
 <p>Another way is to use “distinct()” function from tidyverse package.</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="duplicated-values.html#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span> <span class="dv">5</span>)</span>
-<span id="cb17-2"><a href="duplicated-values.html#cb17-2" aria-hidden="true" tabindex="-1"></a>{</span>
-<span id="cb17-3"><a href="duplicated-values.html#cb17-3" aria-hidden="true" tabindex="-1"></a>  data_duplicated_values[<span class="fu">nrow</span>(data_duplicated_values)<span class="sc">+</span><span class="dv">1</span>,] <span class="ot">=</span> data_duplicated_values[<span class="fu">floor</span>(<span class="fu">runif</span>(<span class="dv">1</span>, <span class="at">min =</span> <span class="dv">1</span>, <span class="at">max =</span> <span class="fu">nrow</span>(data_duplicated_values))),]</span>
-<span id="cb17-4"><a href="duplicated-values.html#cb17-4" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb17-5"><a href="duplicated-values.html#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">duplicated</span>(data_duplicated_values))</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="duplicated-values.html#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span> <span class="dv">5</span>)</span>
+<span id="cb18-2"><a href="duplicated-values.html#cb18-2" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb18-3"><a href="duplicated-values.html#cb18-3" aria-hidden="true" tabindex="-1"></a>  data_duplicated_values[<span class="fu">nrow</span>(data_duplicated_values)<span class="sc">+</span><span class="dv">1</span>,] <span class="ot">=</span> data_duplicated_values[<span class="fu">floor</span>(<span class="fu">runif</span>(<span class="dv">1</span>, <span class="at">min =</span> <span class="dv">1</span>, <span class="at">max =</span> <span class="fu">nrow</span>(data_duplicated_values))),]</span>
+<span id="cb18-4"><a href="duplicated-values.html#cb18-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb18-5"><a href="duplicated-values.html#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">duplicated</span>(data_duplicated_values))</span></code></pre></div>
 <pre><code>## [1] 5</code></pre>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="duplicated-values.html#cb19-1" aria-hidden="true" tabindex="-1"></a>data_duplicated_values <span class="ot">&lt;-</span> data_duplicated_values <span class="sc">%&gt;%</span> <span class="fu">distinct</span>()</span>
-<span id="cb19-2"><a href="duplicated-values.html#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">duplicated</span>(data_duplicated_values))</span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="duplicated-values.html#cb20-1" aria-hidden="true" tabindex="-1"></a>data_duplicated_values <span class="ot">&lt;-</span> data_duplicated_values <span class="sc">%&gt;%</span> <span class="fu">distinct</span>()</span>
+<span id="cb20-2"><a href="duplicated-values.html#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">duplicated</span>(data_duplicated_values))</span></code></pre></div>
 <pre><code>## [1] 0</code></pre>
 </div>
 <div id="duplicates-based-on-specific-columns" class="section level2 hasAnchor" number="3.2">
 <h2><span class="header-section-number">3.2</span> Duplicates based on specific columns<a href="duplicated-values.html#duplicates-based-on-specific-columns" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Some times duplication of elements in certain column/columns is not desirable. We want to be able to remove rows with duplication in specified columns. We first insert 5 rows with duplicates in “Day” and “Month”, we should see “158” rows after insertion:</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="duplicated-values.html#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span> <span class="dv">5</span>)</span>
-<span id="cb21-2"><a href="duplicated-values.html#cb21-2" aria-hidden="true" tabindex="-1"></a>{</span>
-<span id="cb21-3"><a href="duplicated-values.html#cb21-3" aria-hidden="true" tabindex="-1"></a>  Ozone <span class="ot">&lt;-</span> <span class="fu">floor</span>(<span class="fu">runif</span>(<span class="dv">1</span>,<span class="at">min =</span> <span class="dv">0</span>, <span class="at">max =</span> <span class="dv">50</span>))</span>
-<span id="cb21-4"><a href="duplicated-values.html#cb21-4" aria-hidden="true" tabindex="-1"></a>  Solor <span class="ot">&lt;-</span> <span class="fu">floor</span>(<span class="fu">runif</span>(<span class="dv">1</span>,<span class="at">min =</span> <span class="dv">0</span>, <span class="at">max =</span> <span class="dv">300</span>))</span>
-<span id="cb21-5"><a href="duplicated-values.html#cb21-5" aria-hidden="true" tabindex="-1"></a>  Wind <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">runif</span>(<span class="dv">1</span>,<span class="at">min =</span> <span class="dv">0</span>, <span class="at">max =</span> <span class="dv">20</span>), <span class="dv">2</span>)</span>
-<span id="cb21-6"><a href="duplicated-values.html#cb21-6" aria-hidden="true" tabindex="-1"></a>  Temp <span class="ot">&lt;-</span> <span class="fu">floor</span>(<span class="fu">runif</span>(<span class="dv">1</span>,<span class="at">min =</span> <span class="dv">0</span>, <span class="at">max =</span> <span class="dv">20</span>))</span>
-<span id="cb21-7"><a href="duplicated-values.html#cb21-7" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb21-8"><a href="duplicated-values.html#cb21-8" aria-hidden="true" tabindex="-1"></a>  random_index <span class="ot">=</span> <span class="fu">floor</span>(<span class="fu">runif</span>(<span class="dv">1</span>, <span class="at">min =</span> <span class="dv">1</span>, <span class="at">max =</span> <span class="fu">nrow</span>(data_duplicated_values)))</span>
-<span id="cb21-9"><a href="duplicated-values.html#cb21-9" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb21-10"><a href="duplicated-values.html#cb21-10" aria-hidden="true" tabindex="-1"></a>  Month <span class="ot">&lt;-</span> data_duplicated_values[random_index, <span class="st">&#39;Month&#39;</span>]</span>
-<span id="cb21-11"><a href="duplicated-values.html#cb21-11" aria-hidden="true" tabindex="-1"></a>  Day <span class="ot">&lt;-</span> data_duplicated_values[random_index, <span class="st">&#39;Day&#39;</span>]</span>
-<span id="cb21-12"><a href="duplicated-values.html#cb21-12" aria-hidden="true" tabindex="-1"></a>  data_duplicated_values[<span class="fu">nrow</span>(data_duplicated_values)<span class="sc">+</span><span class="dv">1</span>,] <span class="ot">=</span> <span class="fu">c</span>(Ozone, Solor, Wind, Temp, Month, Day)</span>
-<span id="cb21-13"><a href="duplicated-values.html#cb21-13" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb21-14"><a href="duplicated-values.html#cb21-14" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb21-15"><a href="duplicated-values.html#cb21-15" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(data_duplicated_values)</span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="duplicated-values.html#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span> <span class="dv">5</span>)</span>
+<span id="cb22-2"><a href="duplicated-values.html#cb22-2" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb22-3"><a href="duplicated-values.html#cb22-3" aria-hidden="true" tabindex="-1"></a>  Ozone <span class="ot">&lt;-</span> <span class="fu">floor</span>(<span class="fu">runif</span>(<span class="dv">1</span>,<span class="at">min =</span> <span class="dv">0</span>, <span class="at">max =</span> <span class="dv">50</span>))</span>
+<span id="cb22-4"><a href="duplicated-values.html#cb22-4" aria-hidden="true" tabindex="-1"></a>  Solor <span class="ot">&lt;-</span> <span class="fu">floor</span>(<span class="fu">runif</span>(<span class="dv">1</span>,<span class="at">min =</span> <span class="dv">0</span>, <span class="at">max =</span> <span class="dv">300</span>))</span>
+<span id="cb22-5"><a href="duplicated-values.html#cb22-5" aria-hidden="true" tabindex="-1"></a>  Wind <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">runif</span>(<span class="dv">1</span>,<span class="at">min =</span> <span class="dv">0</span>, <span class="at">max =</span> <span class="dv">20</span>), <span class="dv">2</span>)</span>
+<span id="cb22-6"><a href="duplicated-values.html#cb22-6" aria-hidden="true" tabindex="-1"></a>  Temp <span class="ot">&lt;-</span> <span class="fu">floor</span>(<span class="fu">runif</span>(<span class="dv">1</span>,<span class="at">min =</span> <span class="dv">0</span>, <span class="at">max =</span> <span class="dv">20</span>))</span>
+<span id="cb22-7"><a href="duplicated-values.html#cb22-7" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb22-8"><a href="duplicated-values.html#cb22-8" aria-hidden="true" tabindex="-1"></a>  random_index <span class="ot">=</span> <span class="fu">floor</span>(<span class="fu">runif</span>(<span class="dv">1</span>, <span class="at">min =</span> <span class="dv">1</span>, <span class="at">max =</span> <span class="fu">nrow</span>(data_duplicated_values)))</span>
+<span id="cb22-9"><a href="duplicated-values.html#cb22-9" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb22-10"><a href="duplicated-values.html#cb22-10" aria-hidden="true" tabindex="-1"></a>  Month <span class="ot">&lt;-</span> data_duplicated_values[random_index, <span class="st">&#39;Month&#39;</span>]</span>
+<span id="cb22-11"><a href="duplicated-values.html#cb22-11" aria-hidden="true" tabindex="-1"></a>  Day <span class="ot">&lt;-</span> data_duplicated_values[random_index, <span class="st">&#39;Day&#39;</span>]</span>
+<span id="cb22-12"><a href="duplicated-values.html#cb22-12" aria-hidden="true" tabindex="-1"></a>  data_duplicated_values[<span class="fu">nrow</span>(data_duplicated_values)<span class="sc">+</span><span class="dv">1</span>,] <span class="ot">=</span> <span class="fu">c</span>(Ozone, Solor, Wind, Temp, Month, Day)</span>
+<span id="cb22-13"><a href="duplicated-values.html#cb22-13" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb22-14"><a href="duplicated-values.html#cb22-14" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb22-15"><a href="duplicated-values.html#cb22-15" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(data_duplicated_values)</span></code></pre></div>
 <pre><code>## [1] 158</code></pre>
 <p>We can remove rows with duplicated “Day” and “Month” combination using “distinct()”. The “.keep_all = TRUE” argument makes sure that for each duplicated combination of Day and Month, we keep the first row for every duplicated combination and we keep all variables in the Data. We should observe the number of rows after dropping dupicated columns going back to “153”, which is the size of data frame before we insert rows with duplicated “Day” and “Month” combinations.</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="duplicated-values.html#cb23-1" aria-hidden="true" tabindex="-1"></a>data_duplicated_values<span class="ot">&lt;-</span> data_duplicated_values <span class="sc">%&gt;%</span> <span class="fu">distinct</span>(Day, Month, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb23-2"><a href="duplicated-values.html#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(data_duplicated_values)</span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="duplicated-values.html#cb24-1" aria-hidden="true" tabindex="-1"></a>data_duplicated_values<span class="ot">&lt;-</span> data_duplicated_values <span class="sc">%&gt;%</span> <span class="fu">distinct</span>(Day, Month, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb24-2"><a href="duplicated-values.html#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(data_duplicated_values)</span></code></pre></div>
 <pre><code>## [1] 153</code></pre>
 </div>
 <div id="conclusion" class="section level2 hasAnchor" number="3.3">

@@ -23,7 +23,7 @@
 <meta name="author" content="Yudu Chen Yc4142" />
 
 
-<meta name="date" content="2022-11-08" />
+<meta name="date" content="2022-11-10" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -150,8 +150,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="4.1.1" data-path="missing-values.html"><a href="missing-values.html#drop-rows-with-missing-data-in-specified-columns"><i class="fa fa-check"></i><b>4.1.1</b> Drop rows with missing data in specified columns</a></li>
 </ul></li>
-<li class="chapter" data-level="4.2" data-path="missing-values.html"><a href="missing-values.html#impute"><i class="fa fa-check"></i><b>4.2</b> Impute</a></li>
-<li class="chapter" data-level="4.3" data-path="missing-values.html"><a href="missing-values.html#infer"><i class="fa fa-check"></i><b>4.3</b> Infer</a></li>
+<li class="chapter" data-level="4.2" data-path="missing-values.html"><a href="missing-values.html#impute"><i class="fa fa-check"></i><b>4.2</b> Impute</a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="missing-values.html"><a href="missing-values.html#numerical"><i class="fa fa-check"></i><b>4.2.1</b> Numerical</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="interactive-component.html"><a href="interactive-component.html"><i class="fa fa-check"></i><b>5</b> Interactive component</a></li>
 <li class="chapter" data-level="6" data-path="conclusion-1.html"><a href="conclusion-1.html"><i class="fa fa-check"></i><b>6</b> Conclusion</a></li>
@@ -177,6 +179,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="data-we-use" class="section level1 hasAnchor" number="2">
 <h1><span class="header-section-number">Chapter 2</span> Data we use<a href="data-we-use.html#data-we-use" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <p>We will explore techniques of data cleaning using “Airquality” dataset from R, which already has some missing values in it. The dataset is available in baseR and does not require import from outside source.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="data-we-use.html#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
+<span id="cb1-2"><a href="data-we-use.html#cb1-2" aria-hidden="true" tabindex="-1"></a>airQuality_preProcessing <span class="ot">&lt;-</span> airquality</span>
+<span id="cb1-3"><a href="data-we-use.html#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="data-we-use.html#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(airQuality_preProcessing, <span class="dv">10</span>)</span></code></pre></div>
 <pre><code>##    Ozone Solar.R Wind Temp Month Day
 ## 1     41     190  7.4   67     5   1
 ## 2     36     118  8.0   72     5   2
