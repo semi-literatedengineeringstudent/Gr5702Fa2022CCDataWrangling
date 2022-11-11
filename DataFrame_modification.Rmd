@@ -1,0 +1,195 @@
+# Data frame modification (general modification)
+For the most of the time, we will have to engineer our data sets before we do some data analyzation on them. Here I present some tricks to modify our dat sets in R.
+
+## 1.Create DataFrame by arrays
+Creating DataFrame by two arrays, These two arrays will by columns of df.Array length should be the same.order matters.
+```{r}
+first_column <- c("value_1", "value_2", "value_3")
+second_column <- c("value_4", "value_5", "value_6")
+third_column <- c("value_7", "value_8", "value_9")
+df <- data.frame(first_column, second_column)
+df
+```
+another way to create dataFrame, both method produce the same result.
+```{r}
+df <- data.frame (first_column  = c("value_1", "value_2", "value_3"),
+                  second_column = c("value_4", "value_5", "value_6"),
+                  third_column = c("value_7", "value_8", "value_9")
+                  )
+df
+```
+## 2. Create DataFrame by combining two dataFrame(using cbind/rbind)
+```{r}
+# create a new dataFrame
+df1 <- data.frame (first_column  = c("value_1", "value_2", "value_3"),
+                  second_column = c("value_4", "value_5", "value_6"),
+                  third_column = c("value_7", "value_8", "value_9")
+                  )
+df2 <- data.frame (third_column  = c("value_7", "value_8", "value_9"),
+                  fourth_column = c("value_10", "value_11", "value_12")
+                  )
+# combine two dataframe by columns
+# order matters.
+bigger_df <- cbind(df1, df2)
+print(bigger_df)
+# combine two dataframe by rows
+# two DataFrames must have the same column name and order.
+df3 <- data.frame (third_column = c("value_7", "value_8", "value_9"),
+                  fourth_column = c("value_10", "value_11", "value_12")
+                  )
+bigger_df2 <- rbind(df2,df3)
+print(bigger_df2)
+# order matters.
+```
+## 3. adding/change row name
+```{r}
+print(bigger_df2)
+rownames(bigger_df2) <- LETTERS[16:21]
+
+bigger_df2 <- data.frame(bigger_df2,
+                   row.names = LETTERS[16:21])
+# both ways produce the same result
+print(bigger_df2)
+# rownames can change the row name.
+rownames(bigger_df2) <- 1:6
+print(bigger_df2)
+## get row names
+rownames(bigger_df2)
+```
+
+## 4. changing column names
+```{r}
+print(df)
+# change all column names
+colnames(df) <- c('C1','C2')
+print(df)
+# change specific column name
+colnames(df)[1] <- c('new column name')
+print(df)
+#get column names
+colnames(df)
+```
+
+## 5. Adding array to to dataFrame as new column
+```{r}
+print(bigger_df2)
+bigger_df_new = bigger_df2
+
+bigger_df_new$new <- c(3, 3, 6, 7, 8, 12)
+
+bigger_df_new['new'] <- c(3, 3, 6, 7, 8, 12)
+
+new <- c(3, 3, 6, 7, 8, 12)
+bigger_df_new <- cbind(df, new)
+# three ways produce the same result.
+print(bigger_df_new)
+```
+
+## 6. adding column by combination of other columns
+```{r}
+# using mutate() from dplyr
+library(dplyr)
+df_math <- data.frame (first_column  = c(1, 2, 3),
+                  second_column = c(4, 5, 6)
+                  )
+
+## add new column as mathematical operation of other columns.
+output <- mutate(df_math,
+                 sum = (first_column + second_column) / 2)
+print(output)
+## add new column by boolean operation of other columns.
+output <- mutate(df_math,
+                 divisible_by2 = case_when(
+                   first_column%%2 == 0 ~ "yes",
+                   TRUE ~ "No" # otherwise not divisiable by 2.
+                 ))
+print(output)
+```
+
+## 7. joining two table **[1]**
+```{r}
+emp_df=data.frame(
+  emp_id=c(1,2,3,4,5,6),
+  name=c("Smith","Rose","Williams","Jones","Brown","Brown"),
+  superior_emp_id=c(-1,1,1,2,2,2),
+  dept_id=c(10,20,10,10,40,50),
+  dept_branch_id= c(101,102,101,101,104,105)
+)
+
+dept_df=data.frame(
+  dept_id=c(10,20,30,40),
+  dept_name=c("Finance","Marketing","Sales","IT"),
+  dept_branch_id= c(101,102,103,104)
+)
+# inner join
+print(merge(x = emp_df, y = dept_df, by = "dept_id"))
+# outer join 
+print(merge(x = emp_df, y = dept_df, by = "dept_id", all = TRUE)) # all means containing all rows
+# left join
+print(merge(x = emp_df, y = dept_df, by = "dept_id", all.x = TRUE)) # all.x means containing all rows in x
+# right join
+print(merge(x = emp_df, y = dept_df, by = "dept_id", all.y = TRUE)) # all.y means containing all rows in y
+
+```
+
+## 8. pivoting dataframe, understanding pivot_longer
+```{r}
+# pivot_longer transform a data frame from a wide format to a long format by converting feature names to a categorical feature.
+
+library(tidyr) # pivot_longer is from the package tidyr.
+needs_pivoting <- data.frame(sticker_type=c('A', 'B', 'C', 'D'),
+                 sparrow=c(12, 15, 19, 19),
+                 eagle=c(22, 29, 18, 12))
+
+print(needs_pivoting)
+
+needs_pivoting %>% pivot_longer(cols=c('sparrow', 'eagle'), # the columns(feature names) to be pivoted
+                                names_to='species', # the name of the column of features
+                                values_to='price') # the name of the column of values
+```
+
+### 9. binning using cut()
+```{r}
+hour_df <- data.frame(shop_name=c('MAC', 'Tangro', 'cummington', 'Burger King', 'judgement', 'KFC', 'ye', 'Dungeon', 'Razer', 'yeah sir', 'Koban wife', 'string'),
+                 operating_hours=c(2, 5, 4, 7, 7, 8, 5, 4, 5, 11, 13, 8),
+                 rebounds=c(7, 7, 4, 6, 3, 8, 9, 9, 12, 11, 8, 9))
+hour_df
+new_hour_df <- hour_df %>% mutate(operating_hours_bin = cut(operating_hours, breaks=c(0,5,9,13)))
+new_hour_df
+```
+
+### 10. binning using case()
+```{r}
+hour_df2 <- data.frame(shop_name=c('MAC', 'Tangro', 'cummington', 'Burger King', 'judgement', 'KFC', 'ye', 'Dungeon', 'Razer', 'yeah sir', 'Koban wife', 'string'),
+                 operating_hours=c(2, 5, 4, 7, 7, 8, 5, 4, 5, 11, 13, 8),
+                 rebounds=c(7, 7, 4, 6, 3, 8, 9, 9, 12, 11, 8, 9))
+hour_df
+new_hour_df <- hour_df2 %>% mutate(operating_hours_bin = case_when( # logistics
+                   operating_hours <= 3 ~ 'very short',
+                   operating_hours <= 6 & operating_hours > 3 ~ 'short',
+                   operating_hours <= 10 & operating_hours > 6 ~ 'median',
+                   operating_hours > 10 ~ 'long',
+                   TRUE ~ 'what else will this be?'
+                 ))
+new_hour_df
+```
+
+## 11. ordering
+```{r}
+student_result_wild=data.frame(name=c("Ram","Geeta","John","Paul",
+                                 "Cassie","Geeta","Paul"),
+                          maths=c(7,8,8,9,10,8,9),
+                          science=c(5,7,6,8,9,7,8),
+                          history=c(7,7,7,7,7,7,7),
+                          id = c(9,2,3,5,13,2,5))
+student_result_wild # data with out ordering
+# order data by certain variable (ascending)
+student_result_wild[order(student_result_wild$id),]
+# order data by certain variable (descending)
+student_result_wild[order(-student_result_wild$id),]
+# order data by multiple variable, the second orders the duplicates in first variable
+student_result_wild[order(-student_result_wild$id, student_result_wild$science),]
+```
+
+## reference
+[1] https://sparkbyexamples.com/r-programming/how-to-do-left-join-in-r/#:~:text=How%20to%20do%20left%20join%20on%20data%20frames%20in%20R,join%20data%20frames%20in%20R.
