@@ -1,0 +1,27 @@
+# Data scaling
+Scaling is important for data analysis and exploration, Data without scaling can produce misleading result. Also scaling is beneficial for mathematics computation and machine learning.
+
+## standardization
+Standardization unify all the samples' mean and std to 0 and 1, so we could compare the distribution among the scaled samples.
+```{r}
+# we can use the scale from dplyr
+library(dplyr)
+library(openintro)
+scale_df = duke_forest[, 2:5]
+# what happen if we did not scale.
+boxplot(scale_df)
+# after scaling
+scale_df %>% mutate_all(~(scale(.) %>% as.vector)) %>% boxplot() # apply scale() to every column
+```
+
+## Min Max scaling 
+MINMAX scaling is good for svm, so don't hesistate to use it :)
+```{r}
+minmax <- function(x, na.rm = TRUE) {
+    return((x- min(x)) /(max(x)-min(x)))
+}
+scale_df = duke_forest[, 2:5]
+# what happen if we did not scale.
+boxplot(scale_df)
+scale_df %>% mutate_all(~(minmax(.) %>% as.vector)) %>% boxplot() # apply minmax() to every column
+```

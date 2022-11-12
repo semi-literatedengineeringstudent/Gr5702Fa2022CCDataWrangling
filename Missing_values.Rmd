@@ -282,3 +282,39 @@ print(paste0('number of missing values in Solar.R column after impute is ', sum(
     + Depending on what predicative model we use, the training and prediction could be computationally expensive. 
     + If the feature we predict does not depend on other features in data set we select to construct predicative model, the filled missing value will be mis leading for our future analysis.
 
+As for imputing categorical features, 
+
+Replacing NA in categorical features with string
+```{r}
+na_df <- data.frame(A = c(NA, 7, 8, 5, 3),
+                     B = c(4, 10, NA, 7, 4), 
+                    fantasy = c("sad", "we", NA, 'adf', 'NA'),
+                     C = c(1, 0, NA, 9, NA), 
+                     D = c("tangro", "ok", NA, 'yes', 'NA'))
+i1 <- !sapply(na_df, is.numeric)
+
+na_df[i1] <- lapply(na_df[i1], function(x)
+              replace(x, is.na(x), 'MISSING'))
+na_df
+```
+
+Replacing NA in categorical features with mode **[1]**
+```{r}
+na_df <- data.frame(A = c(NA, 7, 8, 5, 3),
+                     B = c(4, 10, NA, 7, 4), 
+                    fantasy = c("sad", "we", NA, 'adf', 'NA'),
+                     C = c(1, 0, NA, 9, NA), 
+                     D = c("tangro", "ok", NA, 'yes', 'NA'))
+i1 <- !sapply(na_df, is.numeric)
+Mode <- function(x) { 
+      ux <- sort(unique(x))
+      ux[which.max(tabulate(match(x, ux)))] 
+}
+na_df[i1] <- lapply(na_df[i1], function(x)
+              replace(x, is.na(x), Mode(x[!is.na(x)])))
+na_df
+```
+
+## Reference
+[1]https://stackoverflow.com/questions/36377813/impute-most-frequent-categorical-value-in-all-columns-in-data-frame
+

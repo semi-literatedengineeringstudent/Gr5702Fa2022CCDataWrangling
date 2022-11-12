@@ -10,6 +10,7 @@ language:
 rmd_files: [
   'index.Rmd',
   'data.Rmd',
+  'DataFrame_modification.Rmd',
   'Duplicated_values.Rmd',
   'Missing_values.Rmd',
   'interactive.Rmd',
