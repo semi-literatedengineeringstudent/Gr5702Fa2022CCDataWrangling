@@ -147,10 +147,9 @@ We have drop all 3 rows with at least 3 NA, so the size of airQuality_3NA_Insert
 
 ## Impute
 Dropping rows is a straight forward approach. However, dropping too many drows would induce huge data loss, which would be detrimental to our task. We can insert values we specify into entries with missing values. This will minimize data loss. Though we would never know if imputed values could reflect the true pattern of the data.
-We first install package we will use:
+We first import package we will use:
 
-```{r}
-#install.packages('imputeTS')
+```{r, echo = TRUE}
 library(imputeTS)
 ```
 ### Numerical
