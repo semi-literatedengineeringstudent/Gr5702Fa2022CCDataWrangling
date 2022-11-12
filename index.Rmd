@@ -17,6 +17,7 @@ We first import libraries we will use:
 ```{r}
 library(readr)
 library(tidyverse)
+library
 ```
 
 readr package is used to gain a glimpse of data set we will clean.

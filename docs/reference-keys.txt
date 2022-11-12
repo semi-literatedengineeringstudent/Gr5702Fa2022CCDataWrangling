@@ -10,13 +10,12 @@ drop-rows-with-missing-data-in-specified-columns
 na-in-single-column
 na-in-several-columns-and
 na-in-several-columns-or
-impute
-infer
-interactive-component
-conclusion-1
 drop-columns-with-certain-number-of-na
-impute-with-sample-statistics
+impute
 numerical
 impute-with-constant
+impute-with-sample-statistics
 impute-by-value-adjacent-to-missing-value
 impute-using-predicative-model
+interactive-component
+conclusion-1
